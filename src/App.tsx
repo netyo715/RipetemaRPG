@@ -1,25 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import ExpInfo from './features/expInfo/ExpInfo';
+import { GameInfoProvider } from './contexts/GameInfo';
+import { CharactersProvider } from './contexts/Character';
+import Menu from './features/menu/Menu';
+import MainContents from './features/main_contents/MainContents';
 
 function App() {
+  /*
+  const isContinueBattle = useRef(false);
+  const adventurer = useRef(new Adventurer(5));
+  */
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    /*<div className="App">
+      <Battle isContinueBattle={isContinueBattle} adventurer={adventurer.current}></Battle>
+      <button className="btn" onClick={() => isContinueBattle.current = false}>出撃終了</button>
+      <button className="btn" onClick={() => adventurer.current.spd++}>+</button>
+      <button className="btn" onClick={() => adventurer.current.spd--}>-</button>
+    </div>*/
+    <GameInfoProvider>
+      <CharactersProvider>
+        <div className="App">
+          <div className="App_left">
+            <div className="App_left_top">
+              <ExpInfo/>
+            </div>
+            <div className="App_left_bottom">
+              <MainContents/>
+            </div>
+          </div>
+          <div className="App_right">
+            <Menu/>
+          </div>
+        </div>
+      </CharactersProvider>
+    </GameInfoProvider>
   );
 }
 

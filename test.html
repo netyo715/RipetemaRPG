@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+
+  #container {
+    text-align: center;
+  }
+
+  #text {
+    display: inline-block;
+    font-size: 24px;
+    transition: transform 2s;
+  }
+
+  #rotate-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+  }
+</style>
+<title>Text Rotation Page</title>
+</head>
+<body>
+<div id="container">
+  <div id="text">テキスト</div>
+  <button id="rotate-button">回転</button>
+</div>
+<script>
+  const textElement = document.getElementById('text');
+  const rotateButton = document.getElementById('rotate-button');
+  let rotating = false;
+
+  rotateButton.addEventListener('click', () => {
+      textElement.style.transition = 'none'; // 追加
+      textElement.style.transform = 'rotate(0deg)';
+      console.log("out");
+      setTimeout(() => {
+        textElement.style.transition = 'transform 2s'; // 追加
+        textElement.style.transform = 'rotate(360deg)';
+        console.log("in");
+      }, 0);
+  });
+</script>
+</body>
+</html>

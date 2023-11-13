@@ -1,0 +1,27 @@
+.Menu{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.Menu_tab-list{
+  height: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  background-color: lightyellow;
+}
+.Menu_tab{
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.Menu_tab.selected{
+  background: yellow;
+}
+.Menu_tab-content{
+  flex-grow: 1;
+  width: 100%;
+}
