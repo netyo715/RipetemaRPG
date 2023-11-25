@@ -70,38 +70,59 @@ type BattleProps = {
 }
 function Battle({setIsBattling, areaId}: BattleProps){
   const refBattleProcess = useRef<BattleProcess|null>(null);
-  const [battleLog, updateBattleLog] = useImmer<{logNumber: number, log: string}[]>([{logNumber: 0, log: "戦闘開始"}]);
+  const [battleLog, updateBattleLog] = useImmer<{logNumber: number, log: string}[]>([{logNumber: 0, log: ""}]);
   const characters = useContext(CharactersContext)!;
   
+  const area = getArea(areaId);
+
   if(refBattleProcess.current === null){
-    refBattleProcess.current = new BattleProcess(
-      (log) => updateBattleLog(draft => {
-        draft.push({
-          logNumber: draft[draft.length-1].logNumber+1,
-          log: log
-        });
-      }));
+    initBattle();
+  }
+  const battleProcess = refBattleProcess.current!;
+  if(!battleProcess.isBattling){
+    if(battleProcess.isWin){
+      // 経験値処理とかやる
+    }
+    initBattle();
   }
 
-  const battleProcess = refBattleProcess.current!;
-  const area = getArea(areaId);
+  function initBattle(){
+    const monsterIds = area.monsterPatterns[0].monsterIds;
+    refBattleProcess.current = new BattleProcess(
+      characters,
+      monsterIds,
+      sendLog,
+    );
+  }
 
   function exitBattle(){
     battleProcess.close();
     setIsBattling(false);
   }
 
-  if(!battleProcess.isBattling){
-    const monsterIds = area.monsterPatterns[0].monsterIds;
-    battleProcess.start(characters, monsterIds);
+  function sendLog(log: string){
+    updateBattleLog(draft => {
+      draft.push({
+        logNumber: draft[draft.length-1].logNumber+1,
+        log: log
+      });
+    });
   }
   
   return(
     <div className="Battle">
-      <p>バトル</p>
+      <h2>バトル</h2>
       <p>{area.name}</p>
       <button onClick={exitBattle}>マップに戻る</button>
-      <p>ログ</p>
+      <h2>味方</h2>
+      {battleProcess.allyUnits.map((unit) => {
+        return <p>{unit.name} hp: {unit.battleStatus.hp}</p>
+      })}
+      <h2>モンスター</h2>
+      {battleProcess.enemyUnits.map((unit) => {
+        return <p>{unit.name} hp: {unit.battleStatus.hp}</p>
+      })}
+      <h2>ログ</h2>
       {battleLog.slice(-10).map((log) => <p key={log.logNumber}>{log.log}</p>).reverse()}
     </div>
   );

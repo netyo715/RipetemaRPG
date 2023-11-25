@@ -37,13 +37,13 @@ export const AREA_INFO: AreaInfo = {
   [AreaId.TestArea2_1]: {
     name: "TestArea2_1",
     monsterPatterns: [
-      {weight: 1, monsterIds: [MonsterId.TestMonster]},
+      {weight: 1, monsterIds: [MonsterId.TestMonster, MonsterId.TestMonster]},
     ],
   },
   [AreaId.TestArea2_2]: {
     name: "TestArea2_2",
     monsterPatterns: [
-      {weight: 1, monsterIds: [MonsterId.TestMonster]},
+      {weight: 1, monsterIds: [MonsterId.TestMonster, MonsterId.TestMonster]},
     ],
   },
 };

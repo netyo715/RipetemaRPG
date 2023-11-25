@@ -5,6 +5,10 @@ import { MONSTER_INFO } from "../data/parameter/monster";
 import { Area, Dungeon } from "../types/map";
 import { Monster } from "../types/monster";
 
+export function getValueRandom<T>(array: T[]): T{
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 export function getMonster(id: MonsterId): Monster{
   const info = MONSTER_INFO[id];
   return {

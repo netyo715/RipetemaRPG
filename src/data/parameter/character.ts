@@ -12,12 +12,12 @@ type BattleStatusFormula = {
  */
 export function calculateBaseStatus(level: number): Status {
   return {
-    hp: 50 + level*30,
-    atk: 5 + level*3,
-    def: 5 + level*3,
-    mat: 5 + level*3,
-    mdf: 5 + level*3,
-    spd: 5 + level*3,
+    hp: 20 + level*30,
+    atk: 2 + level*3,
+    def: 2 + level*3,
+    mat: 2 + level*3,
+    mdf: 2 + level*3,
+    spd: 2 + level*3,
     crt: 5 + Math.floor(level/10),
   };
 }
