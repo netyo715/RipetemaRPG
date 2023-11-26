@@ -1,5 +1,6 @@
+import { SkillId, SkillType } from "../../data/define/skill";
 import { Status } from "../../types/status";
-import { getValueRandom } from "../../utils/utils";
+import { getSkill, getValueRandom } from "../../utils/utils";
 import { BattleProcess } from "./battle_process";
 
 /**
@@ -28,7 +29,7 @@ export class BattleUnit {
     isAlly: boolean,
     name: string,
     defaultStatus: Status,
-    skillIds: any, // TODO skillIds使ってスキル情報取得
+    skillIds: SkillId[],
     ) {
     this.battle = battle;
     this.unitId = unitId;
@@ -36,7 +37,8 @@ export class BattleUnit {
     this.name = name;
     this.defaultStatus = defaultStatus;
     this.battleStatus = {maxHp: defaultStatus.hp, ...defaultStatus}
-    this.battleActions = [
+    this.battleActions = [];
+    this.battleActions.push(
       // 通常攻撃
       new BattleAction(
         battle,
@@ -55,7 +57,19 @@ export class BattleUnit {
           }, target);
           battle.sendLog(`${target.name}に${damage}ダメージ！`)
         })
-    ];
+    );
+    skillIds.forEach((id) => {
+      const skill = getSkill(id);
+      switch (skill.type) {
+        case SkillType.Active:
+          this.battleActions.push(
+            new BattleAction(battle, this, BattleActionType.Skill, skill.coolDown, skill.behavior)
+          );
+          break;
+        default:
+          break;
+      }
+    });
   }
   reduceHp(damage: number){
     this.battleStatus.hp -= damage;
@@ -127,7 +141,7 @@ export type BattleStatus = {
   crt: number,
 }
 
-class Damage {
+export class Damage {
   trigger: DamageSource
   otherSources: DamageSource[]
   constructor(trigger: DamageSource){
@@ -148,10 +162,10 @@ class Damage {
   }
 }
 
-type DamageSource = {
+export type DamageSource = {
   type: BattleActionType, // TODO
   physicalDamage: number,
   magicDamage: number,
 }
 
-type AttackEffect = (damage: Damage, actionUnit: BattleUnit, targetUnit: BattleUnit) => Damage
+export type AttackEffect = (damage: Damage, actionUnit: BattleUnit, targetUnit: BattleUnit) => Damage

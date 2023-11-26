@@ -1,11 +1,11 @@
 export enum DungeonId{
-  TestDungeon1 = "TestDungeon1",
-  TestDungeon2 = "TestDungeon2",
+  TestDungeon1 = "10001",
+  TestDungeon2 = "10002",
 }
 
 export enum AreaId{
-  TestArea1_1 = "TestArea1_1",
-  TestArea1_2 = "TestArea1_2",
-  TestArea2_1 = "TestArea2_1",
-  TestArea2_2 = "TestArea2_2",
+  TestArea1_1 = "10001",
+  TestArea1_2 = "10002",
+  TestArea2_1 = "10003",
+  TestArea2_2 = "10004",
 }

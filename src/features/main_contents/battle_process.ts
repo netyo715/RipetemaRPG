@@ -2,6 +2,7 @@ import { MonsterId } from "../../data/define/monster";
 import { BattleAction, BattleUnit } from "./battle_unit";
 import { Character } from "../../types/character";
 import { getMonster } from "../../utils/utils";
+import { SkillId } from "../../data/define/skill";
 
 export class BattleProcess {
   sendLog: (log: string) => void
@@ -16,12 +17,12 @@ export class BattleProcess {
     this.isBattling = true;
     this.sendLog = sendLog;
     this.allyUnits = initialCharacters.map((character, index) => {
-      return new BattleUnit(this, index, true, character.name, character.status, []); // TODO skillIds
+      return new BattleUnit(this, index, true, character.name, character.status, [SkillId.TestAttack]); // TODO skillIds
     });
     this.enemyUnits = monsterIds.map((id) => getMonster(id)).map((monster, index) => {
       return new BattleUnit(this, index, false, monster.name, monster.status, []); // TODO skillIds
     });
-    this.sendLog("戦闘開始");
+    this.sendLog("戦闘開始"); // TODO ○○が現れた！とかかも
     this.setTimeoutHandler = setTimeout(this.turn.bind(this), this.INTERVAL);
   }
 
@@ -32,39 +33,49 @@ export class BattleProcess {
 
   turn(){
     // 行動の集約と時間経過
-    // TODO 最小coolDown分だけ時間を進める→行動 を繰り返すようにしないといけない
     const battleActions: BattleAction[] = [];
     Object.values(this.allyUnits).forEach((units) => {
       units.battleActions.forEach((battleAction) => {
-        battleAction.coolDown -= this.INTERVAL;
         battleActions.push(battleAction);
       });
     });
     Object.values(this.enemyUnits).forEach((units) => {
       units.battleActions.forEach((battleAction) => {
-        battleAction.coolDown -= this.INTERVAL;
         battleActions.push(battleAction);
       });
     });
-    // 起こった順に処理
-    battleActions.sort((a, b) => {
-      return a.coolDown - b.coolDown;
-    });
-    while (battleActions[0].coolDown <= 0) {
-      battleActions[0].execution();
-      if (this.isAllDead(this.enemyUnits)){
-        this.sendLog("勝利した！");
-        this.close();
-        return;
-      }
-      if (this.isAllDead(this.allyUnits)){
-        this.sendLog("全滅した…");
-        this.close();
-        return;
-      }
+
+    // 時間経過させる処理
+    let remainingTime = this.INTERVAL;
+    while (remainingTime > 0){
+      // クールダウン順に並べる
       battleActions.sort((a, b) => {
         return a.coolDown - b.coolDown;
       });
+      // どれだけ時間が過ぎるか決める
+      const reduceTime = Math.min(remainingTime, battleActions[0].coolDown);
+      remainingTime -= reduceTime;
+      battleActions.forEach((action) => {
+        action.coolDown -= reduceTime;
+      });
+      // 残りクールダウンが0になったものだけ行動
+      for(let action of battleActions){
+        if (action.coolDown > 0){
+          break;
+        }
+        action.execution();
+        // 戦闘終了チェック
+        if (this.isAllDead(this.enemyUnits)){
+          this.sendLog("勝利した！");
+          this.close();
+          return;
+        }
+        if (this.isAllDead(this.allyUnits)){
+          this.sendLog("全滅した…");
+          this.close();
+          return;
+        }
+      }
     }
     // 処理中にcloseされているかもしれないのでチェックする
     if (this.isBattling){

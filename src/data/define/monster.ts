@@ -2,5 +2,5 @@
  * モンスターの識別子
  */
 export enum MonsterId{
-  TestMonster = "TestMonster",
+  TestMonster = "10000",
 }

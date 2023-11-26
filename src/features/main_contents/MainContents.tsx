@@ -32,7 +32,7 @@ function Map({setIsBattling, setBattleAreaId}: MapProps){
         const dungeon = getDungeon(dungeonId);
         dungeonNodes.push(
           <div
-            key={dungeon.id}
+            key={dungeon.name}
             className="Map_dungeon"
             onClick={() => 
               setSelectedDungeonId(dungeonId === selectedDungeonId ? null : dungeonId
