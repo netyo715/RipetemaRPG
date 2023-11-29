@@ -1,12 +1,13 @@
-import { Status } from "../../types/status";
+import { Monster } from "../../types/monster";
 import { MonsterId } from "../define/monster";
 
 type MonsterInfo = {
-  [key in MonsterId]: {name: string, status: Status};
+  [key in MonsterId]: Monster;
 };
 
 export const MONSTER_INFO: MonsterInfo = {
   [MonsterId.TestMonster]: {
+    id: MonsterId.TestMonster,
     name: "テストモンスター",
     status: {
       hp: 100,
@@ -16,6 +17,7 @@ export const MONSTER_INFO: MonsterInfo = {
       mdf: 1,
       spd: 3,
       crt: 1,
-    }
+    },
+    exp: 300,
   }
 };

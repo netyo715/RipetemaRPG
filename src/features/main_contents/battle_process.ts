@@ -4,18 +4,27 @@ import { Character } from "../../types/character";
 import { getMonster } from "../../utils/utils";
 import { SkillId } from "../../data/define/skill";
 
+/**
+ * 戦闘の内部処理を行うクラス
+ * 戦う相手が決まってから終了するまでを管理する
+ */
 export class BattleProcess {
   sendLog: (log: string) => void
+  onWin: () => void
+  onLose: () => void
+  onEnd: () => void
   isBattling = false;
-  isWin = false;
   setTimeoutHandler: NodeJS.Timeout|null = null;
   allyUnits: BattleUnit[] = [];
   enemyUnits: BattleUnit[] = [];
   readonly INTERVAL = 16;
 
-  constructor(initialCharacters: Character[], monsterIds: MonsterId[], sendLog: (log: string) => void) {
+  constructor(initialCharacters: Character[], monsterIds: MonsterId[], sendLog: (log: string) => void, onWin: () => void, onLose: () => void, onEnd: () => void) {
     this.isBattling = true;
     this.sendLog = sendLog;
+    this.onWin = onWin;
+    this.onLose = onLose;
+    this.onEnd = onEnd;
     this.allyUnits = initialCharacters.map((character, index) => {
       return new BattleUnit(this, index, true, character.name, character.status, [SkillId.TestAttack]); // TODO skillIds
     });
@@ -66,12 +75,12 @@ export class BattleProcess {
         action.execution();
         // 戦闘終了チェック
         if (this.isAllDead(this.enemyUnits)){
-          this.sendLog("勝利した！");
+          this.onWin();
           this.close();
           return;
         }
         if (this.isAllDead(this.allyUnits)){
-          this.sendLog("全滅した…");
+          this.onLose();
           this.close();
           return;
         }

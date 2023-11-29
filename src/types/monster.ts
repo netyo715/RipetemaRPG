@@ -5,4 +5,5 @@ export type Monster = {
   id: MonsterId,
   name: string,
   status: Status,
+  exp: number,
 }

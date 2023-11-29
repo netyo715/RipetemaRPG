@@ -26,9 +26,10 @@ export function getSkill(id: SkillId): Skill{
 export function getMonster(id: MonsterId): Monster{
   const info = MONSTER_INFO[id];
   return {
-    id: id,
+    id: info.id,
     name: info.name,
-    status: info.status,
+    status: {...info.status},
+    exp: info.exp,
   }
 }
 

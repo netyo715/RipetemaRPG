@@ -1,6 +1,6 @@
 import { JobId } from "../data/define/job";
 import { calculateBaseRequirementExp, calculateJobRequirementExp } from "../data/parameter/exp";
-import { calculateBaseStatus } from "../data/parameter/character";
+import { calculateBaseStatus, calculateJobStatus } from "../data/parameter/character";
 import { Job, getDefaultJob } from "./job";
 import { Status, margeStatus } from "./status";
 
@@ -12,6 +12,7 @@ export type Character = {
   name: string;
   level: number;
   exp: number;
+  requirementExp: number;
   status: Status;
   baseStatus: Status;
   jobs: {[key in JobId]: Job};
@@ -32,6 +33,7 @@ export function getDefaultCharacter(id: number): Character{
     name: "新しい冒険者",
     level: 1,
     exp: 0,
+    requirementExp: calculateBaseRequirementExp(1),
     status: margeStatus(status, jobs[JobId.Adventurer].jobStatus),
     baseStatus: status,
     jobs: jobs,
@@ -45,32 +47,33 @@ export function getDefaultCharacter(id: number): Character{
  * @param exp 経験値増加分
  */
 export function gainExp(character: Character, exp: number){
-  const baseRequirementExp = calculateBaseRequirementExp(character.level);
+  // キャラクターレベル
   character.exp += exp;
-  if (character.exp >= baseRequirementExp){
-    character.exp -= baseRequirementExp;
+  while (character.exp >= character.requirementExp){
+    character.exp -= character.requirementExp;
     character.level += 1;
-  } 
-
+    character.requirementExp = calculateBaseRequirementExp(character.level);
+  }
+  // 職業レベル
   const job = character.currentJob;
-  const jobRequirementExp = calculateJobRequirementExp(job.id, job.level);
   job.exp += exp
-  if (job.exp >= jobRequirementExp){
-    job.exp -= jobRequirementExp;
+  while (job.exp >= job.requirementExp){
+    job.exp -= job.requirementExp;
     job.level += 1;
+    job.requirementExp = calculateJobRequirementExp(job.id, job.level);
   }
 
-  updateCharacterStatus(character);
+  calculateCharacterStatus(character);
 }
 
 /**
  * ステータスを更新する
  * @param character キャラクター
  */
-export function updateCharacterStatus(character: Character){
+export function calculateCharacterStatus(character: Character){
   character.status = margeStatus(
-    character.baseStatus,
-    character.currentJob.jobStatus
+    calculateBaseStatus(character.level),
+    calculateJobStatus(character.currentJob.id, character.currentJob.level),
   );
 }
 
@@ -81,5 +84,5 @@ export function updateCharacterStatus(character: Character){
  */
 export function changeJob(character: Character, jobId: JobId){
   character.currentJob = character.jobs[jobId];
-  updateCharacterStatus(character);
+  calculateCharacterStatus(character);
 }

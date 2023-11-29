@@ -1,9 +1,9 @@
 import { Dispatch, ReactNode, SetStateAction, useContext, useRef, useState } from "react";
 import "./MainContents.css";
 import { AreaId, DungeonId } from "../../data/define/map";
-import { getArea, getDungeon } from "../../utils/utils";
+import { getArea, getDungeon, getMonster } from "../../utils/utils";
 import { useImmer } from "use-immer";
-import { CharactersContext } from "../../contexts/Character";
+import { CharactersContext, CharactersDispatchContext } from "../../contexts/Character";
 import { BattleProcess } from "./battle_process";
 
 export default function MainContents(){
@@ -72,6 +72,7 @@ function Battle({setIsBattling, areaId}: BattleProps){
   const refBattleProcess = useRef<BattleProcess|null>(null);
   const [battleLog, updateBattleLog] = useImmer<{logNumber: number, log: string}[]>([{logNumber: 0, log: ""}]);
   const characters = useContext(CharactersContext)!;
+  const characterDispatch = useContext(CharactersDispatchContext)!;
   
   const area = getArea(areaId);
 
@@ -80,9 +81,6 @@ function Battle({setIsBattling, areaId}: BattleProps){
   }
   const battleProcess = refBattleProcess.current!;
   if(!battleProcess.isBattling){
-    if(battleProcess.isWin){
-      // 経験値処理とかやる
-    }
     initBattle();
   }
 
@@ -92,6 +90,20 @@ function Battle({setIsBattling, areaId}: BattleProps){
       characters,
       monsterIds,
       sendLog,
+      // 勝利時
+      () => {
+        sendLog("戦闘に勝利した！");
+        const sumExp = monsterIds.map(id => getMonster(id).exp).reduce((acc, val) => acc+val, 0);
+        sendLog(`${sumExp} 経験値を手に入れた`);
+        characterDispatch({
+          type: "gainExpAll",
+          exp: sumExp,
+        });
+      },
+      () => {
+        sendLog("全滅した…");
+      },
+      () => {},
     );
   }
 
