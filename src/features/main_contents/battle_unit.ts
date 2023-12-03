@@ -50,12 +50,14 @@ export class BattleUnit {
           battle.sendLog(`${actioner.name}の攻撃！`);
           const targetTeam = actioner.isAlly ? battle.enemyUnits : battle.allyUnits;
           const target = getValueRandom(targetTeam.filter((unit: BattleUnit) => !unit.isDead));
-          const damage = action.causeDamage({
+          let isCritical = actioner.battleStatus.crt >= Math.random()*100;
+          const damageResult = action.causeDamage(new Damage({
             type: BattleActionType.Normal,
             physicalDamage: actioner.battleStatus.atk,
             magicDamage: 0,
-          }, target);
-          battle.sendLog(`${target.name}に${damage}ダメージ！`)
+          }, isCritical), [target]);
+          const causedDamage = damageResult.causedDamages[0];
+          battle.sendLog(`${damageResult.damage.isCritical ? "クリティカル！" : ""} ${target.name}に${causedDamage}ダメージ！`);
         })
     );
     skillIds.forEach((id) => {
@@ -113,20 +115,26 @@ export class BattleAction {
   /**
    * 指定したユニットにダメージを与える
    * @param damageSource 
-   * @param targetUnit 
+   * @param targetUnits
    * @returns 与えたダメージ
    */
-  causeDamage(damageSource: DamageSource, targetUnit: BattleUnit): Number{
-    let damage = new Damage(damageSource)
+  causeDamage(damage: Damage, targetUnits: BattleUnit[]): {causedDamages: Number[], damage: Damage}{
+    let causedDamages = new Array(targetUnits.length).fill(0);
+    // クリティカル判定
     // 攻撃時処理
     // 守備時処理
-    const calculatedPhysicalDamage = Math.max(Math.floor(damage.totalPhysicalDamage() - targetUnit.battleStatus.def / 2), 0);
-    const calculatedMagicDamage = Math.max(Math.floor(damage.totalMagicDamage() - targetUnit.battleStatus.mdf / 2), 0);
-    const totalDamage = calculatedPhysicalDamage+calculatedMagicDamage;
-    targetUnit.reduceHp(totalDamage);
+    // ダメージを与える
+    targetUnits.forEach((target, index) => {
+      const totalDamage = damage.totalDamage();
+      const calculatedPhysicalDamage = Math.max(Math.floor(totalDamage.physicalDamage - target.battleStatus.def / 2), 0);
+      const calculatedMagicDamage = Math.max(Math.floor(totalDamage.magicDamage - target.battleStatus.mdf / 2), 0);
+      const calculatedTotalDamage = calculatedPhysicalDamage+calculatedMagicDamage;
+      target.reduceHp(calculatedTotalDamage);
+      causedDamages[index] += calculatedTotalDamage;
+    });
     // 命中時攻撃側処理
     // 命中時守備側処理
-    return totalDamage;
+    return {causedDamages: causedDamages, damage: damage};
   }
 }
 
@@ -144,21 +152,31 @@ export type BattleStatus = {
 export class Damage {
   trigger: DamageSource
   otherSources: DamageSource[]
-  constructor(trigger: DamageSource){
+  isCritical: boolean
+  constructor(trigger: DamageSource, isCritical: boolean=false){
     this.trigger = trigger;
     this.otherSources = [];
+    this.isCritical = isCritical;
   }
-  totalPhysicalDamage(): number{
-    return this.trigger.physicalDamage + this.otherSources.reduce(
+  totalDamage(): {physicalDamage: number, magicDamage: number}{
+    let physicalDamage = this.trigger.physicalDamage;
+    let magicDamage = this.trigger.magicDamage;
+    if(this.isCritical){
+      physicalDamage *= 2;
+      magicDamage *= 2;
+    }
+    physicalDamage += this.otherSources.reduce(
       (acc: number, source: DamageSource): number => {
         return acc + source.physicalDamage;
       }, 0);
-  }
-  totalMagicDamage(): number{
-    return this.trigger.magicDamage + this.otherSources.reduce(
+    magicDamage += this.trigger.magicDamage + this.otherSources.reduce(
       (acc: number, source: DamageSource): number => {
         return acc + source.magicDamage;
       }, 0);
+    return {
+      physicalDamage: physicalDamage,
+      magicDamage: magicDamage,
+    }
   }
 }
 

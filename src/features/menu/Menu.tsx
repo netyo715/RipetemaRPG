@@ -1,10 +1,12 @@
 import { ReactNode, useState, Children, isValidElement } from "react";
 import Debug from "./menu_contents/debug/Debug";
 import "./Menu.css";
+import CharctersTab from "./menu_contents/characters/Characters";
 
 export default function Menu() {
   return (
     <MenuWrapper>
+      <TabContent tabName="キャラクター"><CharctersTab/></TabContent>
       <TabContent tabName="デバッグ"><Debug/></TabContent>
       <TabContent tabName="テストタブ"><p>あいうえお</p></TabContent>
     </MenuWrapper>

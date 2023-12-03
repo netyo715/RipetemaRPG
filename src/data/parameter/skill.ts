@@ -1,5 +1,5 @@
 import { BattleProcess } from "../../features/main_contents/battle_process";
-import { AttackEffect, BattleAction, BattleActionType, BattleUnit } from "../../features/main_contents/battle_unit";
+import { AttackEffect, BattleAction, BattleActionType, BattleUnit, Damage } from "../../features/main_contents/battle_unit";
 import { getValueRandom } from "../../utils/utils";
 import { SkillId, SkillType } from "../define/skill";
 
@@ -25,12 +25,13 @@ export const SKILL_INFO: SkillInfo = {
       for (let i = 0; i < 3; i++) {
         const target = getValueRandom(targetTeam.filter((unit: BattleUnit) => !unit.isDead));
         if (target){
-          const damage = action.causeDamage({
+          const damageResult = action.causeDamage(new Damage({
             type: BattleActionType.Skill,
             physicalDamage: actioner.battleStatus.atk*2,
             magicDamage: 0,
-          }, target);
-          battle.sendLog(`${i+1}回目、${target.name}に${damage}ダメージ！`)
+          }), [target]);
+          const causedDamage = damageResult.causedDamages[0]
+          battle.sendLog(`${i+1}回目、${target.name}に${causedDamage}ダメージ！`)
         }
       }
     }
