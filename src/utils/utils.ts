@@ -28,8 +28,9 @@ export function getMonster(id: MonsterId): Monster{
   return {
     id: info.id,
     name: info.name,
-    status: {...info.status},
+    status: info.status,
     exp: info.exp,
+    lootTable: info.lootTable,
   }
 }
 

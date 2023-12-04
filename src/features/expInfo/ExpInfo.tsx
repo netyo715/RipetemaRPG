@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import "./ExpInfo.css"
 import { GameInfoContext } from "../../contexts/GameInfo";
-import { CharactersContext } from "../../contexts/Character";
+import { CharactersContext } from "../../contexts/Characters";
 import { calculateBaseRequirementExp } from "../../data/parameter/exp";
 import { JobName } from "../../data/parameter/job";
 

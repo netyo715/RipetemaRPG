@@ -1,6 +1,6 @@
 import { useImmerReducer } from "use-immer";
 import { Dispatch, ReactNode, createContext } from "react";
-import { GameInfo, getDefaultGameInfo } from "../types/game_info";
+import { GameInfo, getDefaultGameInfo } from "../types/gameInfo";
 
 export const GameInfoContext = createContext<GameInfo | null>(null);
 export const GameInfoDispatchContext = createContext<Dispatch<GameInfoAction> | null>(null);
@@ -20,10 +20,6 @@ type GameInfoAction =
 |{
 	type: "addGold";
 	gold: number;
-}
-|{
-	type: "gainExpAll";
-	exp: number;
 }
 
 function gameInfoReducer(characters: GameInfo, action: GameInfoAction){

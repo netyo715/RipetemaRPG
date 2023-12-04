@@ -1,4 +1,5 @@
 import { Monster } from "../../types/monster";
+import { ItemId } from "../define/item";
 import { MonsterId } from "../define/monster";
 
 type MonsterInfo = {
@@ -19,5 +20,17 @@ export const MONSTER_INFO: MonsterInfo = {
       crt: 1,
     },
     exp: 300,
+    lootTable: [
+      {
+        itemId: ItemId.TestItem1,
+        amount: 1,
+        dropRate: 50,
+      },
+      {
+        itemId: ItemId.TestItem1,
+        amount: 2,
+        dropRate: 10,
+      },
+    ],
   }
 };

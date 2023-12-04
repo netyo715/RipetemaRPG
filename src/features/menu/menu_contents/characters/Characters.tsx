@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { GameInfoDispatchContext } from "../../../../contexts/GameInfo";
-import { CharactersContext, CharactersDispatchContext } from "../../../../contexts/Character";
+import { CharactersContext, CharactersDispatchContext } from "../../../../contexts/Characters";
 
 export default function CharctersTab(){
   const Characters = useContext(CharactersContext)!;

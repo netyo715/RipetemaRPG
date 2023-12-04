@@ -7,7 +7,7 @@ export const CharactersContext = createContext<Character[] | null>(null);
 export const CharactersDispatchContext = createContext<Dispatch<CharactersAction> | null>(null);
 
 export function CharactersProvider({children}: {children: ReactNode}) {
-	const [characters, dispatch] = useImmerReducer(characterReducer, initialCharacters);
+	const [characters, dispatch] = useImmerReducer(charactersReducer, initialCharacters);
 	return(
 		<CharactersContext.Provider value={characters}>
 			<CharactersDispatchContext.Provider value={dispatch}>
@@ -28,7 +28,7 @@ type CharactersAction =
 	exp: number;
 }
 
-function characterReducer(characters: Character[], action: CharactersAction){
+function charactersReducer(characters: Character[], action: CharactersAction){
 	switch (action.type){
 		case "changeJob": {
 			changeJob(characters[action.index], action.jobId);
