@@ -1,34 +1,14 @@
-import { useImmerReducer } from "use-immer";
-import { Dispatch, ReactNode, createContext } from "react";
-import { GameInfo, getDefaultGameInfo } from "../types/gameInfo";
+import { ReactNode, createContext, useContext } from "react";
+import { GameInfo } from "../types/gameInfo";
+import { MasterDataContext } from "./Master";
 
 export const GameInfoContext = createContext<GameInfo | null>(null);
-export const GameInfoDispatchContext = createContext<Dispatch<GameInfoAction> | null>(null);
 
 export function GameInfoProvider({children}: {children: ReactNode}) {
-	const [gameInfo, dispatch] = useImmerReducer(gameInfoReducer, initialGameInfo);
+	const gameInfo = useContext(MasterDataContext)!.gameInfo;
 	return(
 		<GameInfoContext.Provider value={gameInfo}>
-			<GameInfoDispatchContext.Provider value={dispatch}>
-				{children}
-			</GameInfoDispatchContext.Provider>
+			{children}
 		</GameInfoContext.Provider>
 	)
 }
-
-type GameInfoAction = 
-|{
-	type: "addGold";
-	gold: number;
-}
-
-function gameInfoReducer(characters: GameInfo, action: GameInfoAction){
-	switch (action.type){
-		case "addGold": {
-			characters.gold += action.gold;
-			break;
-		}
-	}
-}
-
-const initialGameInfo = getDefaultGameInfo();

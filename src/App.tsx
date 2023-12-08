@@ -4,40 +4,32 @@ import { GameInfoProvider } from './contexts/GameInfo';
 import { CharactersProvider } from './contexts/Characters';
 import Menu from './features/menu/Menu';
 import MainContents from './features/main_contents/MainContents';
-import { ItemInfoProvider } from './contexts/ItemInfo';
+import { ItemAmountsProvider } from './contexts/ItemAmounts';
+import { MasterDataProvider } from './contexts/Master';
 
 function App() {
-  /*
-  const isContinueBattle = useRef(false);
-  const adventurer = useRef(new Adventurer(5));
-  */
-
   return (
-    /*<div className="App">
-      <Battle isContinueBattle={isContinueBattle} adventurer={adventurer.current}></Battle>
-      <button className="btn" onClick={() => isContinueBattle.current = false}>出撃終了</button>
-      <button className="btn" onClick={() => adventurer.current.spd++}>+</button>
-      <button className="btn" onClick={() => adventurer.current.spd--}>-</button>
-    </div>*/
-    <GameInfoProvider>
-      <CharactersProvider>
-        <ItemInfoProvider>
-          <div className="App">
-            <div className="App_left">
-              <div className="App_left_top">
-                <ExpInfo/>
+    <MasterDataProvider>
+      <GameInfoProvider>
+        <CharactersProvider>
+          <ItemAmountsProvider>
+            <div className="App">
+              <div className="App_left">
+                <div className="App_left_top">
+                  <ExpInfo/>
+                </div>
+                <div className="App_left_bottom">
+                  <MainContents/>
+                </div>
               </div>
-              <div className="App_left_bottom">
-                <MainContents/>
+              <div className="App_right">
+                <Menu/>
               </div>
             </div>
-            <div className="App_right">
-              <Menu/>
-            </div>
-          </div>
-        </ItemInfoProvider>
-      </CharactersProvider>
-    </GameInfoProvider>
+          </ItemAmountsProvider>
+        </CharactersProvider>
+      </GameInfoProvider>
+    </MasterDataProvider>
   );
 }
 

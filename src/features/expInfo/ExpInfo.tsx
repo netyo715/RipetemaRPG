@@ -2,8 +2,6 @@ import { useContext } from "react";
 import "./ExpInfo.css"
 import { GameInfoContext } from "../../contexts/GameInfo";
 import { CharactersContext } from "../../contexts/Characters";
-import { calculateBaseRequirementExp } from "../../data/parameter/exp";
-import { JobName } from "../../data/parameter/job";
 
 export default function ExpInfo() {
   const gameInfo = useContext(GameInfoContext)!;
@@ -14,8 +12,8 @@ export default function ExpInfo() {
       {characters.map((character) => {
         const job = character.currentJob;
         return <p>名前: {character.name} 職業: {job.name}<br/>
-          レベル: {character.level} 次のレベルまで: {character.requirementExp}<br/>
-          職業レベル: {job.level} 次のレベルまで: {job.requirementExp}
+          レベル: {character.level} 次のレベルまで: {character.requirementExp - character.exp}<br/>
+          職業レベル: {job.level} 次のレベルまで: {job.requirementExp - job.exp}
           </p>
       })}
     </div>

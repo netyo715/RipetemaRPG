@@ -3,10 +3,11 @@ import "./MainContents.css";
 import { AreaId, DungeonId } from "../../data/define/map";
 import { getArea, getDungeon, getMonster } from "../../utils/utils";
 import { useImmer } from "use-immer";
-import { CharactersContext, CharactersDispatchContext } from "../../contexts/Characters";
+import { CharactersContext } from "../../contexts/Characters";
 import { BattleProcess } from "./battle_process";
 import { ItemName } from "../../data/parameter/item";
-import { ItemInfoDispatchContext } from "../../contexts/ItemInfo";
+import { ItemAmountsDispatchContext } from "../../contexts/old_contexts/ItemAmounts";
+import { DispatchContext } from "../../contexts/Master";
 
 export default function MainContents(){
   const [isBattling, setIsBattling] = useState(false);
@@ -74,8 +75,7 @@ function Battle({setIsBattling, areaId}: BattleProps){
   const refBattleProcess = useRef<BattleProcess|null>(null);
   const [battleLog, updateBattleLog] = useImmer<{logNumber: number, log: string}[]>([{logNumber: 0, log: ""}]);
   const characters = useContext(CharactersContext)!;
-  const characterDispatch = useContext(CharactersDispatchContext)!;
-  const itemInfoDispatch = useContext(ItemInfoDispatchContext)!;
+  const dispatch = useContext(DispatchContext)!;
   
   const area = getArea(areaId);
 
@@ -99,14 +99,14 @@ function Battle({setIsBattling, areaId}: BattleProps){
         sendLog("戦闘に勝利した！");
         const sumExp = monsters.reduce((acc, val) => acc+val.exp, 0);
         sendLog(`${sumExp} 経験値を手に入れた`);
-        characterDispatch({
+        dispatch({
           type: "gainExpAll",
           exp: sumExp,
         });
         monsters.forEach(((monster) => {
           monster.lootTable.forEach((loot) => {
             if(loot.dropRate > Math.random()*100){
-              itemInfoDispatch({
+              dispatch({
                 type: "addItem",
                 itemId: loot.itemId,
                 amount: loot.amount,

@@ -3,12 +3,13 @@ import { calculateBaseRequirementExp, calculateJobRequirementExp } from "../data
 import { calculateBaseStatus, calculateJobStatus } from "../data/parameter/character";
 import { Job, getDefaultJob } from "./job";
 import { Status, margeStatus } from "./status";
+import { GearId } from "../data/define/gear";
 
 /**
  * 冒険者
  */
 export type Character = {
-  id: number;
+  index: number;
   name: string;
   level: number;
   exp: number;
@@ -23,13 +24,13 @@ export type Character = {
  * 新規キャラクターを返す
  * @returns 新規キャラクター
  */
-export function getDefaultCharacter(id: number): Character{
+export function getDefaultCharacter(index: number): Character{
   const status = calculateBaseStatus(1);
   const jobs = {
     [JobId.Adventurer]: getDefaultJob(JobId.Adventurer),
   };
   return {
-    id: id,
+    index: index,
     name: "新しい冒険者",
     level: 1,
     exp: 0,
@@ -62,7 +63,7 @@ export function gainExp(character: Character, exp: number){
     job.level += 1;
     job.requirementExp = calculateJobRequirementExp(job.id, job.level);
   }
-
+  
   calculateCharacterStatus(character);
 }
 
@@ -71,6 +72,7 @@ export function gainExp(character: Character, exp: number){
  * @param character キャラクター
  */
 export function calculateCharacterStatus(character: Character){
+  // TODO 装備品も反映
   character.status = margeStatus(
     calculateBaseStatus(character.level),
     calculateJobStatus(character.currentJob.id, character.currentJob.level),
@@ -85,4 +87,13 @@ export function calculateCharacterStatus(character: Character){
 export function changeJob(character: Character, jobId: JobId){
   character.currentJob = character.jobs[jobId];
   calculateCharacterStatus(character);
+}
+
+/**
+ * 装備する
+ * @param character
+ * @param gearId
+ */
+export function equipmentGear(character: Character, gearId: GearId){
+  // TODO 装備
 }

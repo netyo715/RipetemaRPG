@@ -10,14 +10,14 @@ type RequirementExpFormula = {
  * @returns 必要経験値
  */
 export function calculateBaseRequirementExp(level: number): number {
-  return 100; // TODO 必要経験値考える
+  return 100 * level; // TODO 必要経験値考える
 }
 
 /**
  * 職業毎の必要経験値
  */
 const REQUIREMENT_EXP_FORMULA: RequirementExpFormula = {
-  [JobId.Adventurer]: (level) => 100, // TODO 必要経験値考える
+  [JobId.Adventurer]: (level) => 100 * level, // TODO 必要経験値考える
 }
 
 /**

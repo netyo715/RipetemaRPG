@@ -1,17 +1,17 @@
 import { useContext } from "react";
-import { GameInfoDispatchContext } from "../../../../contexts/GameInfo";
-import { CharactersContext, CharactersDispatchContext } from "../../../../contexts/Characters";
+import { CharactersContext } from "../../../../contexts/Characters";
+import { DispatchContext } from "../../../../contexts/Master";
 
 export default function CharctersTab(){
   const Characters = useContext(CharactersContext)!;
-  const CharactersDispatch = useContext(CharactersDispatchContext)!;
+  const dispatch = useContext(DispatchContext)!;
   return(
   <div className="CharactersTab">
     {Characters.map((character) => {
       return <div>
         <p>名前: {character.name} 職業: {character.currentJob.name}<br/>
-          レベル: {character.level} 次のレベルまで: {character.requirementExp}<br/>
-          職業レベル: {character.currentJob.level} 次のレベルまで: {character.currentJob.requirementExp}
+          レベル: {character.level} 次のレベルまで: {character.requirementExp-character.exp}<br/>
+          職業レベル: {character.currentJob.level} 次のレベルまで: {character.currentJob.requirementExp-character.currentJob.exp}
         </p>
         <p>ステータス<br/>
           HP: {character.status.hp}<br/>
