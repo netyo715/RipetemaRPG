@@ -3,4 +3,5 @@
  */
 export enum JobId{
   Adventurer = "0",
+  TestJob = "test1",
 }

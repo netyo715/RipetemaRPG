@@ -2,5 +2,5 @@
  * アイテムの識別子
  */
 export enum ItemId{
-  TestItem1 = "10001",
+  TestItem1 = "test1",
 }

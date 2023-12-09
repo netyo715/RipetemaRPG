@@ -11,5 +11,5 @@ export enum SkillType{
 }
 
 export enum SkillId{
-  TestAttack = "10000",
+  TestAttack = "test1",
 }

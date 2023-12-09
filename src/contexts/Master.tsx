@@ -112,9 +112,7 @@ function reducer(data: MasterData, action: Action){
 			break;
 		}
 		case "equpmentGear": {
-			const equipGear = data.gearInfos[action.gearIndex];
-      equipGear.equippedCharacterIndex = action.characterIndex;
-      equipmentGear(data.characters[action.characterIndex], equipGear.gearId);
+      equipmentGear(data.characters[action.characterIndex], data.gearInfos, action.gearIndex);
       break
 		}
 	}

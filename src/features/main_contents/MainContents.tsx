@@ -5,8 +5,7 @@ import { getArea, getDungeon, getMonster } from "../../utils/utils";
 import { useImmer } from "use-immer";
 import { CharactersContext } from "../../contexts/Characters";
 import { BattleProcess } from "./battle_process";
-import { ItemName } from "../../data/parameter/item";
-import { ItemAmountsDispatchContext } from "../../contexts/old_contexts/ItemAmounts";
+import { ITEM_NAME } from "../../data/parameter/item";
 import { DispatchContext } from "../../contexts/Master";
 
 export default function MainContents(){
@@ -111,7 +110,7 @@ function Battle({setIsBattling, areaId}: BattleProps){
                 itemId: loot.itemId,
                 amount: loot.amount,
               });
-              sendLog(`${ItemName[loot.itemId]}を${loot.amount}個手に入れた`);
+              sendLog(`${ITEM_NAME[loot.itemId]}を${loot.amount}個手に入れた`);
             }
           });
         }));

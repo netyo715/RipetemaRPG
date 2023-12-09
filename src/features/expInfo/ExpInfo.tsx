@@ -10,7 +10,7 @@ export default function ExpInfo() {
     <div className="ExpInfo">
       <p>ゴールド: {gameInfo.gold}</p>
       {characters.map((character) => {
-        const job = character.currentJob;
+        const job = character.jobs[character.currentJobId]!;
         return <p>名前: {character.name} 職業: {job.name}<br/>
           レベル: {character.level} 次のレベルまで: {character.requirementExp - character.exp}<br/>
           職業レベル: {job.level} 次のレベルまで: {job.requirementExp - job.exp}

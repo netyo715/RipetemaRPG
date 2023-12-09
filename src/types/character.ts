@@ -4,6 +4,9 @@ import { calculateBaseStatus, calculateJobStatus } from "../data/parameter/chara
 import { Job, getDefaultJob } from "./job";
 import { Status, margeStatus } from "./status";
 import { GearId } from "../data/define/gear";
+import { GearInfos, GearType } from "./gear";
+import { GEAR_INFO } from "../data/parameter/gear";
+import { idText } from "typescript";
 
 /**
  * 冒険者
@@ -16,8 +19,9 @@ export type Character = {
   requirementExp: number;
   status: Status;
   baseStatus: Status;
-  jobs: {[key in JobId]: Job};
-  currentJob: Job;
+  jobs: {[key in JobId]: Job|null};
+  currentJobId: JobId;
+  gear: {[key in GearType]: GearId|null};
 }
 
 /**
@@ -28,6 +32,7 @@ export function getDefaultCharacter(index: number): Character{
   const status = calculateBaseStatus(1);
   const jobs = {
     [JobId.Adventurer]: getDefaultJob(JobId.Adventurer),
+    [JobId.TestJob]: null,
   };
   return {
     index: index,
@@ -38,7 +43,16 @@ export function getDefaultCharacter(index: number): Character{
     status: margeStatus(status, jobs[JobId.Adventurer].jobStatus),
     baseStatus: status,
     jobs: jobs,
-    currentJob: jobs[JobId.Adventurer],
+    currentJobId: JobId.Adventurer,
+    gear: {
+      [GearType.Weapon]: null,
+      [GearType.Shield]: null,
+      [GearType.Head]: null,
+      [GearType.Body]: null,
+      [GearType.Hand]: null,
+      [GearType.Leg]: null,
+      [GearType.Accessory]: null
+    }
   };
 }
 
@@ -56,26 +70,36 @@ export function gainExp(character: Character, exp: number){
     character.requirementExp = calculateBaseRequirementExp(character.level);
   }
   // 職業レベル
-  const job = character.currentJob;
+  const job = character.jobs[character.currentJobId]!;
   job.exp += exp
   while (job.exp >= job.requirementExp){
     job.exp -= job.requirementExp;
     job.level += 1;
     job.requirementExp = calculateJobRequirementExp(job.id, job.level);
   }
-  
-  calculateCharacterStatus(character);
+
+  updateCharacterStatus(character);
 }
 
 /**
  * ステータスを更新する
  * @param character キャラクター
  */
-export function calculateCharacterStatus(character: Character){
-  // TODO 装備品も反映
+export function updateCharacterStatus(character: Character){
+  // TODO 装備と職業のスキルも反映
+  const gear = character.gear;
   character.status = margeStatus(
     calculateBaseStatus(character.level),
-    calculateJobStatus(character.currentJob.id, character.currentJob.level),
+    calculateJobStatus(character.currentJobId, character.jobs[character.currentJobId]!.level),
+    ...[
+      gear[GearType.Weapon],
+      gear[GearType.Shield],
+      gear[GearType.Head],
+      gear[GearType.Body],
+      gear[GearType.Hand],
+      gear[GearType.Leg],
+      gear[GearType.Accessory],
+    ].filter(arg => arg !== null).map(arg => GEAR_INFO[arg!].status),
   );
 }
 
@@ -85,15 +109,28 @@ export function calculateCharacterStatus(character: Character){
  * @param jobId 変更後の職業
  */
 export function changeJob(character: Character, jobId: JobId){
-  character.currentJob = character.jobs[jobId];
-  calculateCharacterStatus(character);
+  character.currentJobId = jobId;
+  updateCharacterStatus(character);
 }
 
 /**
  * 装備する
+ * キャラクターの装備と装備所持状況を更新する
  * @param character
  * @param gearId
  */
-export function equipmentGear(character: Character, gearId: GearId){
-  // TODO 装備
+export function equipmentGear(character: Character, gearInfos: GearInfos, gearIndex: number){
+  const equipGearInfo = gearInfos[gearIndex];
+  const gearType = GEAR_INFO[equipGearInfo.gearId].type;
+  const unequipGear = character.gear[gearType];
+  if (unequipGear !== null){
+    gearInfos.forEach((value) => {
+      if (value.gearId === unequipGear && value.equippedCharacterIndex === character.index){
+        value.equippedCharacterIndex = null;
+      }
+    });
+  }
+  character.gear[gearType] = equipGearInfo.gearId;
+  gearInfos[gearIndex].equippedCharacterIndex = character.index;
+  updateCharacterStatus(character);
 }

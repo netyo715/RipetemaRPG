@@ -8,10 +8,11 @@ export default function CharctersTab(){
   return(
   <div className="CharactersTab">
     {Characters.map((character) => {
+      const job = character.jobs[character.currentJobId]!;
       return <div>
-        <p>名前: {character.name} 職業: {character.currentJob.name}<br/>
+        <p>名前: {character.name} 職業: {job.name}<br/>
           レベル: {character.level} 次のレベルまで: {character.requirementExp-character.exp}<br/>
-          職業レベル: {character.currentJob.level} 次のレベルまで: {character.currentJob.requirementExp-character.currentJob.exp}
+          職業レベル: {job.level} 次のレベルまで: {job.requirementExp-job.exp}
         </p>
         <p>ステータス<br/>
           HP: {character.status.hp}<br/>

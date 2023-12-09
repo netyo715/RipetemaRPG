@@ -18,6 +18,7 @@ export function calculateBaseRequirementExp(level: number): number {
  */
 const REQUIREMENT_EXP_FORMULA: RequirementExpFormula = {
   [JobId.Adventurer]: (level) => 100 * level, // TODO 必要経験値考える
+  [JobId.TestJob]: (level) => 100 * level,
 }
 
 /**

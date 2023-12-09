@@ -1,7 +1,5 @@
 import { Gear, GearType } from "../../types/gear";
 import { GearId } from "../define/gear";
-import { ItemId } from "../define/item";
-import { MonsterId } from "../define/monster";
 
 type GearInfo = {
   [key in GearId]: Gear;

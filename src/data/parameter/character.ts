@@ -37,6 +37,17 @@ const BATTLE_STATUS_FORMULA: BattleStatusFormula = {
       crt: 0,
     };
   },
+  [JobId.TestJob]: (level) => {
+    return {
+      hp: level,
+      atk: level,
+      def: level,
+      mat: level,
+      mdf: level,
+      spd: level,
+      crt: 0,
+    };
+  },
 }
 
 /**
