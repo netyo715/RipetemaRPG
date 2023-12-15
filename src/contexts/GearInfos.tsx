@@ -4,7 +4,7 @@ import { MasterDataContext } from "./Master";
 
 export const GearInfosContext = createContext<GearInfos | null>(null);
 
-export function GearAmountsProvider({children}: {children: ReactNode}) {
+export function GearInfosProvider({children}: {children: ReactNode}) {
 	const gearInfos = useContext(MasterDataContext)!.gearInfos;
 	return(
 		<GearInfosContext.Provider value={gearInfos}>

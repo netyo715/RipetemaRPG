@@ -27,14 +27,14 @@ export default function Debug(){
     <button onClick={
       () => dispatch({type:"gainExpAll", exp:50})
       }>50経験値</button>
+    <hr/>
     <button onClick = {
       () => dispatch({type: "changeJob", index: 0, jobId: JobId.Adventurer})
     }>{JOB_NAME[JobId.Adventurer]}に転職</button>
     <button onClick = {
       () => dispatch({type: "changeJob", index: 0, jobId: JobId.TestJob})
     }>{JOB_NAME[JobId.TestJob]}に転職</button>
-    <p>{characters[0].jobs[JobId.Adventurer]!.level}</p>
-    <p>{characters[0].jobs[JobId.TestJob]!.level}</p>
+    <hr/>
   </div>
   );
 }

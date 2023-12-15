@@ -4,8 +4,8 @@ import { ItemId } from "../data/define/item";
 import { ItemAmounts } from "../types/item";
 import { JobId } from "../data/define/job";
 import { GearId } from "../data/define/gear";
-import { GearInfos } from "../types/gear";
-import { Character, changeJob, equipmentGear, gainExp, getDefaultCharacter } from "../types/character";
+import { GearInfos, GearType } from "../types/gear";
+import { Character, changeJob, equipmentGear, gainExp, getDefaultCharacter, unequipmentGear } from "../types/character";
 import { GameInfo, getDefaultGameInfo } from "../types/gameInfo";
 
 export const MasterDataContext = createContext<MasterData | null>(null);
@@ -62,8 +62,13 @@ type Action =
 	index: number;
 }
 |{
-	type: "equpmentGear";
+	type: "equipmentGear";
 	gearIndex: number;
+	characterIndex: number;
+}
+|{
+	type: "unequipmentGear";
+	gearType: GearType;
 	characterIndex: number;
 }
 
@@ -111,18 +116,31 @@ function reducer(data: MasterData, action: Action){
 			}
 			break;
 		}
-		case "equpmentGear": {
+		case "equipmentGear": {
       equipmentGear(data.characters[action.characterIndex], data.gearInfos, action.gearIndex);
       break
+		}
+		case "unequipmentGear": {
+			unequipmentGear(data.characters[action.characterIndex], data.gearInfos, action.gearType);
+			break
 		}
 	}
 }
 
-const initialMasterData = {
+const initialMasterData: MasterData = {
   gameInfo: getDefaultGameInfo(),
   characters: [getDefaultCharacter(0)],
   itemAmounts: {},
-  gearInfos: [],
+  // TODO 本当はこっち gearInfos: [],
+	gearInfos: [
+		{gearId: GearId.TestGear1, equippedCharacterIndex: null},
+		{gearId: GearId.TestGear2, equippedCharacterIndex: null},
+		{gearId: GearId.TestGear3, equippedCharacterIndex: null},
+		{gearId: GearId.TestGear4, equippedCharacterIndex: null},
+		{gearId: GearId.TestGear5, equippedCharacterIndex: null},
+		{gearId: GearId.TestGear6, equippedCharacterIndex: null},
+		{gearId: GearId.TestGear7, equippedCharacterIndex: null},
+	],
 };
 
 type MasterData = {

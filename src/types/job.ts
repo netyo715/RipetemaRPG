@@ -1,8 +1,6 @@
 import { JobId } from "../data/define/job";
-import { calculateJobStatus } from "../data/parameter/character";
 import { calculateJobRequirementExp } from "../data/parameter/exp";
 import { JOB_NAME } from "../data/parameter/job";
-import { Status } from "./status";
 
 /**
  * 職業
@@ -13,7 +11,6 @@ export type Job = {
   level: number;
   exp: number;
   requirementExp: number;
-  jobStatus: Status;
 }
 
 /**
@@ -28,6 +25,5 @@ export function getDefaultJob(jobId: JobId): Job{
     level: 1,
     exp: 0,
     requirementExp: calculateJobRequirementExp(jobId, 1),
-    jobStatus: calculateJobStatus(jobId, 1),
   };
 }

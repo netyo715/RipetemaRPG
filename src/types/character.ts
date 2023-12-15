@@ -6,7 +6,6 @@ import { Status, margeStatus } from "./status";
 import { GearId } from "../data/define/gear";
 import { GearInfos, GearType } from "./gear";
 import { GEAR_INFO } from "../data/parameter/gear";
-import { idText } from "typescript";
 
 /**
  * 冒険者
@@ -18,7 +17,6 @@ export type Character = {
   exp: number;
   requirementExp: number;
   status: Status;
-  baseStatus: Status;
   jobs: {[key in JobId]: Job|null};
   currentJobId: JobId;
   gear: {[key in GearType]: GearId|null};
@@ -29,19 +27,17 @@ export type Character = {
  * @returns 新規キャラクター
  */
 export function getDefaultCharacter(index: number): Character{
-  const status = calculateBaseStatus(1);
   const jobs = {
     [JobId.Adventurer]: getDefaultJob(JobId.Adventurer),
     [JobId.TestJob]: null,
   };
-  return {
+  let character = {
     index: index,
     name: "新しい冒険者",
     level: 1,
     exp: 0,
     requirementExp: calculateBaseRequirementExp(1),
-    status: margeStatus(status, jobs[JobId.Adventurer].jobStatus),
-    baseStatus: status,
+    status: calculateBaseStatus(1),
     jobs: jobs,
     currentJobId: JobId.Adventurer,
     gear: {
@@ -54,6 +50,8 @@ export function getDefaultCharacter(index: number): Character{
       [GearType.Accessory]: null
     }
   };
+  updateCharacterStatus(character);
+  return character;
 }
 
 /**
@@ -115,9 +113,9 @@ export function changeJob(character: Character, jobId: JobId){
 
 /**
  * 装備する
- * キャラクターの装備と装備所持状況を更新する
  * @param character
- * @param gearId
+ * @param gearInfos 
+ * @param gearIndex 
  */
 export function equipmentGear(character: Character, gearInfos: GearInfos, gearIndex: number){
   const equipGearInfo = gearInfos[gearIndex];
@@ -132,5 +130,19 @@ export function equipmentGear(character: Character, gearInfos: GearInfos, gearIn
   }
   character.gear[gearType] = equipGearInfo.gearId;
   gearInfos[gearIndex].equippedCharacterIndex = character.index;
+  updateCharacterStatus(character);
+}
+
+export function unequipmentGear(character: Character, gearInfos: GearInfos, gearType: GearType){
+  const gearId = character.gear[gearType];
+  if (gearId === null){
+    return;
+  }
+  character.gear[gearType] = null;
+  gearInfos.forEach((value) => {
+    if (value.gearId === gearId && value.equippedCharacterIndex === character.index){
+      value.equippedCharacterIndex = null;
+    }
+  });
   updateCharacterStatus(character);
 }

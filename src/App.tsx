@@ -6,27 +6,30 @@ import Menu from './features/menu/Menu';
 import MainContents from './features/main_contents/MainContents';
 import { ItemAmountsProvider } from './contexts/ItemAmounts';
 import { MasterDataProvider } from './contexts/Master';
+import { GearInfosProvider } from './contexts/GearInfos';
 
 function App() {
   return (
     <MasterDataProvider>
       <GameInfoProvider>
         <CharactersProvider>
-          <ItemAmountsProvider>
-            <div className="App">
-              <div className="App_left">
-                <div className="App_left_top">
-                  <ExpInfo/>
+          <GearInfosProvider>
+            <ItemAmountsProvider>
+              <div className="App">
+                <div className="App_left">
+                  <div className="App_left_top">
+                    <ExpInfo/>
+                  </div>
+                  <div className="App_left_bottom">
+                    <MainContents/>
+                  </div>
                 </div>
-                <div className="App_left_bottom">
-                  <MainContents/>
+                <div className="App_right">
+                  <Menu/>
                 </div>
               </div>
-              <div className="App_right">
-                <Menu/>
-              </div>
-            </div>
-          </ItemAmountsProvider>
+            </ItemAmountsProvider>
+          </GearInfosProvider>
         </CharactersProvider>
       </GameInfoProvider>
     </MasterDataProvider>

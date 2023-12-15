@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { CharactersContext } from "../../../../contexts/Characters";
 import { DispatchContext } from "../../../../contexts/Master";
+import { GearType } from "../../../../types/gear";
+import { GEAR_INFO } from "../../../../data/parameter/gear";
 
 export default function CharctersTab(){
   const Characters = useContext(CharactersContext)!;
@@ -22,6 +24,43 @@ export default function CharctersTab(){
           MDF: {character.status.mdf}<br/>
           SPD: {character.status.spd}<br/>
           CRT: {character.status.crt}<br/>
+        </p>
+        <p>装備<br/>
+          武器: {
+            character.gear[GearType.Weapon] !== null 
+              ? GEAR_INFO[character.gear[GearType.Weapon]!].name
+              : "なし"
+          }<br/>
+          盾: {
+            character.gear[GearType.Shield] !== null 
+              ? GEAR_INFO[character.gear[GearType.Shield]!].name
+              : "なし"
+          }<br/>
+          頭: {
+            character.gear[GearType.Head] !== null 
+              ? GEAR_INFO[character.gear[GearType.Head]!].name
+              : "なし"
+          }<br/>
+          体: {
+            character.gear[GearType.Body] !== null 
+              ? GEAR_INFO[character.gear[GearType.Body]!].name
+              : "なし"
+          }<br/>
+          手: {
+            character.gear[GearType.Hand] !== null 
+              ? GEAR_INFO[character.gear[GearType.Hand]!].name
+              : "なし"
+          }<br/>
+          脚: {
+            character.gear[GearType.Leg] !== null 
+              ? GEAR_INFO[character.gear[GearType.Leg]!].name
+              : "なし"
+          }<br/>
+          アクセサリー: {
+            character.gear[GearType.Accessory] !== null 
+              ? GEAR_INFO[character.gear[GearType.Accessory]!].name
+              : "なし"
+          }<br/>
         </p>
       </div>
     })}
