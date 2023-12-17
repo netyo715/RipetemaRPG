@@ -8,8 +8,23 @@ export default function GearInfosTab(){
   const dispatch = useContext(DispatchContext)!;
   return(
   <div className="GearInfosTab">
-    {GearInfos.map((gearInfo) => {
-      return <p>{GEAR_INFO[gearInfo.gearId].name}</p>
+    {GearInfos.map((gearInfo, index) => {
+      if (gearInfo.equippedCharacterIndex === null){
+        return <>
+          <p>{GEAR_INFO[gearInfo.gearId].name}</p>
+          <button onClick={() => {
+            dispatch({
+              type: "equipmentGear",
+              characterIndex: 0,
+              gearIndex: index,
+            });
+          }}>装備する</button>
+        </>
+      }
+      return <>
+        <p>{GEAR_INFO[gearInfo.gearId].name}</p>
+        <p>装備中</p>
+      </>
     })}
   </div>
   );
