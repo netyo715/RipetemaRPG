@@ -1,6 +1,6 @@
-import { SkillId, SkillType } from "../../data/define/skill";
+import { SkillId } from "../../data/define/skill";
 import { Status } from "../../types/status";
-import { getSkill, getValueRandom } from "../../utils/utils";
+import { getActiveSkill, getRandomValue } from "../../utils/utils";
 import { BattleProcess } from "./battle_process";
 
 /**
@@ -49,7 +49,7 @@ export class BattleUnit {
           const actioner = action.actioner;
           battle.sendLog(`${actioner.name}の攻撃！`);
           const targetTeam = actioner.isAlly ? battle.enemyUnits : battle.allyUnits;
-          const target = getValueRandom(targetTeam.filter((unit: BattleUnit) => !unit.isDead));
+          const target = getRandomValue(targetTeam.filter((unit: BattleUnit) => !unit.isDead));
           let isCritical = actioner.battleStatus.crt >= Math.random()*100;
           const damageResult = action.causeDamage(new Damage({
             type: BattleActionType.Normal,
@@ -61,16 +61,10 @@ export class BattleUnit {
         })
     );
     skillIds.forEach((id) => {
-      const skill = getSkill(id);
-      switch (skill.type) {
-        case SkillType.Active:
-          this.battleActions.push(
-            new BattleAction(battle, this, BattleActionType.Skill, skill.coolDown, skill.behavior)
-          );
-          break;
-        default:
-          break;
-      }
+      const skill = getActiveSkill(id);
+      this.battleActions.push(
+        new BattleAction(battle, this, BattleActionType.Skill, skill.coolDown, skill.behavior)
+      );
     });
   }
   reduceHp(damage: number){

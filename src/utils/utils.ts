@@ -3,20 +3,19 @@ import { MonsterId } from "../data/define/monster";
 import { SkillId } from "../data/define/skill";
 import { AREA_INFO, DUNGEON_INFO } from "../data/parameter/map";
 import { MONSTER_INFO } from "../data/parameter/monster";
-import { SKILL_INFO } from "../data/parameter/skill";
+import { ACTIVE_SKILL_INFO } from "../data/parameter/skill";
 import { Area, Dungeon } from "../types/map";
 import { Monster } from "../types/monster";
-import { Skill } from "../types/skill";
+import { ActiveSkill } from "../types/skill";
 
-export function getValueRandom<T>(array: T[]): T{
+export function getRandomValue<T>(array: T[]): T{
   return array[Math.floor(Math.random() * array.length)];
 }
 
-export function getSkill(id: SkillId): Skill{
-  const info = SKILL_INFO[id];
+export function getActiveSkill(id: SkillId): ActiveSkill{
+  const info = ACTIVE_SKILL_INFO[id];
   return {
     id: id,
-    type: info.skillType,
     name: info.name,
     coolDown: info.coolDown,
     behavior: info.behavior,
@@ -28,7 +27,7 @@ export function getMonster(id: MonsterId): Monster{
   return {
     id: info.id,
     name: info.name,
-    status: info.status,
+    status: {...info.status},
     exp: info.exp,
     lootTable: info.lootTable,
   }
