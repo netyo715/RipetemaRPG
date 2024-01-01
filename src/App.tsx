@@ -1,38 +1,29 @@
 import './App.css';
 import ExpInfo from './features/expInfo/ExpInfo';
-import { GameInfoProvider } from './contexts/GameInfo';
-import { CharactersProvider } from './contexts/Characters';
 import Menu from './features/menu/Menu';
 import MainContents from './features/main_contents/MainContents';
-import { ItemAmountsProvider } from './contexts/ItemAmounts';
-import { MasterDataProvider } from './contexts/Master';
-import { GearInfosProvider } from './contexts/GearInfos';
+import RepetemaRPGProviders from './Providers';
+import SaveDataManager from './features/saveDataManager/SaveDataManager';
 
 function App() {
   return (
-    <MasterDataProvider>
-      <GameInfoProvider>
-        <CharactersProvider>
-          <GearInfosProvider>
-            <ItemAmountsProvider>
-              <div className="App">
-                <div className="App_left">
-                  <div className="App_left_top">
-                    <ExpInfo/>
-                  </div>
-                  <div className="App_left_bottom">
-                    <MainContents/>
-                  </div>
-                </div>
-                <div className="App_right">
-                  <Menu/>
-                </div>
-              </div>
-            </ItemAmountsProvider>
-          </GearInfosProvider>
-        </CharactersProvider>
-      </GameInfoProvider>
-    </MasterDataProvider>
+    <RepetemaRPGProviders>
+      <SaveDataManager>
+        <div className="App">
+          <div className="App_left">
+            <div className="App_left_top">
+              <ExpInfo/>
+            </div>
+            <div className="App_left_bottom">
+              <MainContents/>
+            </div>
+          </div>
+          <div className="App_right">
+            <Menu/>
+          </div>
+        </div>
+      </SaveDataManager>
+    </RepetemaRPGProviders>
   );
 }
 

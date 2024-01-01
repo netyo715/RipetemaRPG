@@ -25,6 +25,13 @@ export function MasterDataProvider({children}: {children: ReactNode}) {
 type Action = 
 // ゲーム情報
 |{
+	type: "initialize";
+	data: MasterData;
+}
+|{
+	type: "saveToLocalStorage";
+}
+|{
 	type: "addGold";
 	gold: number;
 }
@@ -75,6 +82,13 @@ type Action =
 function reducer(data: MasterData, action: Action){
 	switch (action.type){
     // ゲーム情報
+		case "initialize": {
+			return action.data;
+		}
+		case "saveToLocalStorage": {
+			localStorage.setItem("repetemaRPGData", JSON.stringify(data));
+			break;
+		}
     case "addGold": {
       data.gameInfo.gold += action.gold;
       break;

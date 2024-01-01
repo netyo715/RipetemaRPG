@@ -114,9 +114,9 @@ export class BattleAction {
    */
   causeDamage(damage: Damage, targetUnits: BattleUnit[]): {causedDamages: Number[], damage: Damage}{
     let causedDamages = new Array(targetUnits.length).fill(0);
-    // クリティカル判定
-    // 攻撃時処理
-    // 守備時処理
+    // TODO クリティカル判定
+    // TODO 攻撃時処理
+    // TODO 守備時処理
     // ダメージを与える
     targetUnits.forEach((target, index) => {
       const totalDamage = damage.totalDamage();
@@ -126,8 +126,8 @@ export class BattleAction {
       target.reduceHp(calculatedTotalDamage);
       causedDamages[index] += calculatedTotalDamage;
     });
-    // 命中時攻撃側処理
-    // 命中時守備側処理
+    // TODO 命中時攻撃側処理
+    // TODO 命中時守備側処理
     return {causedDamages: causedDamages, damage: damage};
   }
 }
