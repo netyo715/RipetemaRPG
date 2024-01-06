@@ -6,7 +6,7 @@ import { useImmer } from "use-immer";
 import { CharactersContext } from "../../contexts/Characters";
 import { BattleProcess } from "./battle_process";
 import { ITEM_NAME } from "../../data/parameter/item";
-import { DispatchContext } from "../../contexts/Master";
+import { BattleProcessContext, DispatchContext } from "../../contexts/Master";
 
 export default function MainContents(){
   const [isBattling, setIsBattling] = useState(false);
@@ -71,7 +71,7 @@ type BattleProps = {
   areaId: AreaId,
 }
 function Battle({setIsBattling, areaId}: BattleProps){
-  const refBattleProcess = useRef<BattleProcess|null>(null);
+  const refBattleProcess = useContext(BattleProcessContext)!;
   const [battleLog, updateBattleLog] = useImmer<{logNumber: number, log: string}[]>([{logNumber: 0, log: ""}]);
   const characters = useContext(CharactersContext)!;
   const dispatch = useContext(DispatchContext)!;

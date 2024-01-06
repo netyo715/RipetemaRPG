@@ -31,6 +31,7 @@ export default function SaveDataManager({children}: {children: ReactNode}){
     masterDataDispatcher({
       type: "saveToLocalStorage",
     });
+    console.log("save");
   };
 
   return <>{children}</>;

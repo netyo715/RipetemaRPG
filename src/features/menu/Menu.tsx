@@ -3,12 +3,14 @@ import Debug from "./menu_contents/debug/Debug";
 import "./Menu.css";
 import CharctersTab from "./menu_contents/characters/Characters";
 import GearInfosTab from "./menu_contents/gearInfos/GearInfos";
+import SettingsTab from "./menu_contents/settings/Settings";
 
 export default function Menu() {
   return (
     <MenuWrapper>
       <TabContent tabName="キャラクター"><CharctersTab/></TabContent>
       <TabContent tabName="装備"><GearInfosTab/></TabContent>
+      <TabContent tabName="設定"><SettingsTab/></TabContent>
       <TabContent tabName="デバッグ"><Debug/></TabContent>
       <TabContent tabName="テストタブ"><p>あいうえお</p></TabContent>
     </MenuWrapper>

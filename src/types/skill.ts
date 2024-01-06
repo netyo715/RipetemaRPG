@@ -1,4 +1,4 @@
-import { SkillId, SkillType } from "../data/define/skill"
+import { SkillId } from "../data/define/skill"
 import { BattleProcess } from "../features/main_contents/battle_process";
 import { BattleAction } from "../features/main_contents/battle_unit";
 

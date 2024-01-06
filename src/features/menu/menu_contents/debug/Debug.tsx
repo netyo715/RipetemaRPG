@@ -5,7 +5,6 @@ import { ITEM_NAME } from "../../../../data/parameter/item";
 import { DispatchContext } from "../../../../contexts/Master";
 import { CharactersContext } from "../../../../contexts/Characters";
 import { JobId } from "../../../../data/define/job";
-import { getDefaultJob } from "../../../../types/job";
 import { JOB_NAME } from "../../../../data/parameter/job";
 
 export default function Debug(){
@@ -13,7 +12,11 @@ export default function Debug(){
   const characters = useContext(CharactersContext)!;
   const itemInfo = useContext(ItemAmountsContext)!;
   if (characters[0].jobs[JobId.TestJob] === null){
-    characters[0].jobs[JobId.TestJob] = getDefaultJob(JobId.TestJob);
+    dispatch({
+      type: "unlockJob",
+      index: 0,
+      jobId: JobId.TestJob,
+    });
   }
   return(
   <div>

@@ -1,5 +1,5 @@
 import { useImmerReducer } from "use-immer";
-import { Dispatch, ReactNode, createContext } from "react";
+import { Dispatch, ReactNode, createContext, useRef } from "react";
 import { ItemId } from "../data/define/item";
 import { ItemAmounts } from "../types/item";
 import { JobId } from "../data/define/job";
@@ -7,16 +7,23 @@ import { GearId } from "../data/define/gear";
 import { GearInfos, GearType } from "../types/gear";
 import { Character, changeJob, equipmentGear, gainExp, getDefaultCharacter, unequipmentGear } from "../types/character";
 import { GameInfo, getDefaultGameInfo } from "../types/gameInfo";
+import { BattleProcess } from "../features/main_contents/battle_process";
+import { getDefaultJob } from "../types/job";
 
 export const MasterDataContext = createContext<MasterData | null>(null);
 export const DispatchContext = createContext<Dispatch<Action> | null>(null);
 
+export const BattleProcessContext = createContext<React.MutableRefObject<BattleProcess | null> | null>(null);
+
 export function MasterDataProvider({children}: {children: ReactNode}) {
-	const [masterData, dispatch] = useImmerReducer(reducer, initialMasterData);
+	const [masterData, dispatch] = useImmerReducer(reducer, initialMasterData());
+	const refBattleProcess = useRef<BattleProcess|null>(null);
   return(
 		<MasterDataContext.Provider value={masterData}>
 			<DispatchContext.Provider value={dispatch}>
-				{children}
+				<BattleProcessContext.Provider value={refBattleProcess}>
+					{children}
+				</BattleProcessContext.Provider>
 			</DispatchContext.Provider>
 		</MasterDataContext.Provider>
 	)
@@ -32,6 +39,9 @@ type Action =
 	type: "saveToLocalStorage";
 }
 |{
+	type: "resetGame";
+}
+|{
 	type: "addGold";
 	gold: number;
 }
@@ -39,6 +49,11 @@ type Action =
 // キャラクター
 |{
 	type: "changeJob";
+	index: number;
+	jobId: JobId;
+}
+|{
+	type: "unlockJob";
 	index: number;
 	jobId: JobId;
 }
@@ -89,6 +104,9 @@ function reducer(data: MasterData, action: Action){
 			localStorage.setItem("repetemaRPGData", JSON.stringify(data));
 			break;
 		}
+		case "resetGame": {
+			return initialMasterData();
+		}
     case "addGold": {
       data.gameInfo.gold += action.gold;
       break;
@@ -99,6 +117,10 @@ function reducer(data: MasterData, action: Action){
       changeJob(data.characters[action.index], action.jobId);
       break;
     }
+		case "unlockJob": {
+			data.characters[action.index].jobs[action.jobId] = getDefaultJob(action.jobId);
+			break;
+		}
     case "gainExpAll": {
       data.characters.forEach((character) => {
 				gainExp(character, action.exp);
@@ -141,20 +163,22 @@ function reducer(data: MasterData, action: Action){
 	}
 }
 
-const initialMasterData: MasterData = {
-  gameInfo: getDefaultGameInfo(),
-  characters: [getDefaultCharacter(0)],
-  itemAmounts: {},
-  // TODO 本当はこっち gearInfos: [],
-	gearInfos: [
-		{gearId: GearId.TestGear1, equippedCharacterIndex: null},
-		{gearId: GearId.TestGear2, equippedCharacterIndex: null},
-		{gearId: GearId.TestGear3, equippedCharacterIndex: null},
-		{gearId: GearId.TestGear4, equippedCharacterIndex: null},
-		{gearId: GearId.TestGear5, equippedCharacterIndex: null},
-		{gearId: GearId.TestGear6, equippedCharacterIndex: null},
-		{gearId: GearId.TestGear7, equippedCharacterIndex: null},
-	],
+const initialMasterData = (): MasterData => {
+	return {
+		gameInfo: getDefaultGameInfo(),
+		characters: [getDefaultCharacter(0)],
+		itemAmounts: {},
+		// TODO 本当はこっち gearInfos: [],
+		gearInfos: [
+			{gearId: GearId.TestGear1, equippedCharacterIndex: null},
+			{gearId: GearId.TestGear2, equippedCharacterIndex: null},
+			{gearId: GearId.TestGear3, equippedCharacterIndex: null},
+			{gearId: GearId.TestGear4, equippedCharacterIndex: null},
+			{gearId: GearId.TestGear5, equippedCharacterIndex: null},
+			{gearId: GearId.TestGear6, equippedCharacterIndex: null},
+			{gearId: GearId.TestGear7, equippedCharacterIndex: null},
+		],
+	}
 };
 
 type MasterData = {
