@@ -7,6 +7,8 @@ import {
   VStack,
 } from "@yamada-ui/react";
 import { Debug } from "./debug/Debug";
+import { Settings } from "./settings/Settings";
+import { AdventurerInfo } from "./adventurer/AdventurerInfo";
 
 // TODO
 export const MenuSection: React.FC = () => {
@@ -22,7 +24,7 @@ export const MenuSection: React.FC = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <p>a</p>
+            <AdventurerInfo />
           </TabPanel>
           <TabPanel>
             <p>b</p>
@@ -31,7 +33,7 @@ export const MenuSection: React.FC = () => {
             <p>c</p>
           </TabPanel>
           <TabPanel>
-            <p>d</p>
+            <Settings />
           </TabPanel>
           <TabPanel>
             <Debug />

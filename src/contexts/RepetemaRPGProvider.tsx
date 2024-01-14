@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { UserDataProvider } from "./UserDataProvider";
+import { DataManageProvider } from "./DataManageProvider";
 
 export const RepetemaRPGProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -7,7 +8,9 @@ export const RepetemaRPGProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <UserDataProvider>
-      {children}
+      <DataManageProvider>
+        {children}
+      </DataManageProvider>
     </UserDataProvider>
   );
 };
