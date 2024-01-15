@@ -10,9 +10,16 @@ import {
   useUpdateGameData,
   useUpdateItemData,
 } from "./UserDataProvider";
+import { AdventurerData, GameData, GearData, ItemData } from "../types/game";
 
 type UpdateUserDataContextProps = {
-  saveGameData: () => void;
+  saveUserData: () => void;
+  loadUserData: (
+    adventurerData: AdventurerData,
+    gearData: GearData,
+    itemData: ItemData,
+    gameData: GameData
+  ) => void;
   changeItemAmount: (itemId: ItemId, amount: number) => void;
 };
 
@@ -64,8 +71,17 @@ export const DataManageProvider: React.FC<{ children: ReactNode }> = ({
     console.log("saved"); // TODO 実装する
   };
 
-  const loadUserData = (): void => {
-    console.log("loaded"); // TODO 実装する
+  const loadUserData = (
+    adventurerData: AdventurerData,
+    gearData: GearData,
+    itemData: ItemData,
+    gameData: GameData
+  ): void => {
+    updateAdventurerData((draft) => adventurerData);
+    updateGearData((draft) => gearData);
+    updateItemData((draft) => itemData);
+    updateGameData((draft) => gameData);
+    console.log("loaded");
   };
 
   const changeItemAmount = (itemId: ItemId, amount: number): void => {
@@ -75,7 +91,8 @@ export const DataManageProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const contextValue: UpdateUserDataContextProps = {
-    saveGameData: saveUserData,
+    saveUserData: saveUserData,
+    loadUserData: loadUserData,
     changeItemAmount: changeItemAmount,
   };
 

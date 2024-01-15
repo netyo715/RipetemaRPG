@@ -11,6 +11,15 @@ export enum JobId {
 }
 
 /**
+ * 職業の名前
+ */
+export const JOB_NAME: JobName = {
+  [JobId.冒険者]: "冒険者",
+  [JobId.戦士]: "戦士",
+  [JobId.魔導士]: "魔導士",
+};
+
+/**
  * 職業毎のスキルと必要レベル
  */
 export const JOB_SKILL_INFO: JobSkillInfo = {
@@ -87,6 +96,10 @@ const JOB_STATUS_INFO: JobStatusInfo = {
     };
     return ret;
   },
+};
+
+type JobName = {
+  [jobId in JobId]: string;
 };
 
 type JobSkillInfo = {

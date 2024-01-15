@@ -8,7 +8,7 @@ import {
 } from "@yamada-ui/react";
 import { Debug } from "./debug/Debug";
 import { Settings } from "./settings/Settings";
-import { AdventurerInfo } from "./adventurer/AdventurerInfo";
+import { AdventurerInfo } from "./adventurerInfo/AdventurerInfo";
 
 // TODO
 export const MenuSection: React.FC = () => {

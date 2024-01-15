@@ -1,47 +1,56 @@
 import React from "react";
-import {
-  useAdventurerData,
-  useItemData,
-} from "../../../../contexts/UserDataProvider";
-import { ItemId } from "../../../../data/item";
 import { Button } from "@yamada-ui/react";
 import { useUpdateUserData } from "../../../../contexts/DataManageProvider";
+import { JobId } from "../../../../data/job";
+import { GearId } from "../../../../data/gear";
 
 export const Debug: React.FC = () => {
   console.log("render debug");
-  const { saveGameData } = useUpdateUserData();
+  const { loadUserData } = useUpdateUserData();
   return (
     <>
-      <Button onClick={saveGameData}>保存</Button>
-      <Item />
-      <ItemUpdate />
-      <Adventurer />
+      <Button
+        onClick={() => loadUserData(debugAdventurerData, [], {}, { gold: 0 })}
+      >
+        冒険者2人
+      </Button>
     </>
   );
 };
 
-const Item: React.FC = () => {
-  console.log("render Item");
-  const itemData = useItemData();
-  return <p>{itemData[ItemId.木の板]}</p>;
-};
-
-const ItemUpdate: React.FC = () => {
-  console.log("render ItemUpdate");
-  const { changeItemAmount } = useUpdateUserData();
-  return (
-    <Button
-      onClick={() =>
-        changeItemAmount(ItemId.木の板, Math.floor(Math.random() * 5))
-      }
-    >
-      更新
-    </Button>
-  );
-};
-
-const Adventurer: React.FC = () => {
-  console.log("render Adventurer");
-  const adventurerData = useAdventurerData();
-  return <p>{adventurerData.toString()}</p>;
-};
+const debugAdventurerData = [
+  {
+    index: 0,
+    name: "冒険者１",
+    currentJobId: JobId.冒険者,
+    equippedGear: {
+      weapon: GearId.木刀,
+      shield: null,
+      head: null,
+      body: null,
+      arm: null,
+      leg: null,
+      other: null,
+    },
+    experience: 1,
+    level: 90,
+    jobInfo: { [JobId.冒険者]: { level: 50, experience: 0 } },
+  },
+  {
+    index: 1,
+    name: "冒険者２",
+    currentJobId: JobId.戦士,
+    equippedGear: {
+      weapon: null,
+      shield: null,
+      head: null,
+      body: null,
+      arm: null,
+      leg: null,
+      other: null,
+    },
+    experience: 1,
+    level: 5,
+    jobInfo: { [JobId.戦士]: { level: 1, experience: 0 } },
+  },
+];

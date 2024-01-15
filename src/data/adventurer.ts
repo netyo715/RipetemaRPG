@@ -5,7 +5,7 @@ import { Status } from "../types/battle";
  * @param level 現在レベル
  * @returns 次のレベルになるための必要経験値
  */
-export const requiredExperience: (level: number) => number = (level) => {
+export const getRequiredExperience: (level: number) => number = (level) => {
   return level * 100; //TODO
 };
 
