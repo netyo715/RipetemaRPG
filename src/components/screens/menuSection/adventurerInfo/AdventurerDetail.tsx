@@ -1,8 +1,10 @@
 import {
   CloseButton,
   Divider,
+  Flex,
   HStack,
   Heading,
+  ScrollArea,
   Spacer,
   Text,
   VStack,
@@ -23,15 +25,15 @@ export const AdventurerDetail: React.FC<{
   const job = adv.jobInfo[adv.currentJobId]!;
   const status = getAdventurerStatus(adv);
   return (
-    <VStack>
-      <HStack>
+    <Flex direction="column" h="full" gap="md">
+      <HStack flexShrink="0">
         <Heading>{adv.name}</Heading>
         <Spacer />
         {adventurerData.length > 1 && (
           <CloseButton onClick={() => setIsViewList(true)} />
         )}
       </HStack>
-      <VStack gap="1">
+      <ScrollArea p="md" type="always" innerProps={{ as: VStack, minH: 0 }}>
         <SpacingRow>
           <Text>レベル</Text>
           <Text>{adv.level}</Text>
@@ -149,8 +151,8 @@ export const AdventurerDetail: React.FC<{
           <Text>CRT</Text>
           <Text>{status.crt}</Text>
         </SpacingRow>
-      </VStack>
-    </VStack>
+      </ScrollArea>
+    </Flex>
   );
 };
 

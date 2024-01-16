@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAdventurerData } from "../../../../contexts/UserDataProvider";
-import { VStack } from "@yamada-ui/react";
+import { Container, VStack } from "@yamada-ui/react";
 import { AdventurerList } from "./AdventurerList";
 import { AdventurerDetail } from "./AdventurerDetail";
 
@@ -15,18 +15,16 @@ export const AdventurerInfo: React.FC = () => {
     setIsViewList(false);
   };
   return (
-    <VStack>
+    <Container h="full" p="0">
       {isViewList && adventurerData.length > 1 ? (
         // リスト表示は冒険者が複数あるときのみ
-        <AdventurerList
-        viewAdventurerDetail={viewAdventurerDetail}
-        />
+        <AdventurerList viewAdventurerDetail={viewAdventurerDetail} />
       ) : (
         <AdventurerDetail
           index={selectedAdventurerIndex}
           setIsViewList={setIsViewList}
         />
       )}
-    </VStack>
+    </Container>
   );
 };

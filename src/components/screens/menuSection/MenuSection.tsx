@@ -6,7 +6,6 @@ import {
   Tabs,
   VStack,
 } from "@yamada-ui/react";
-import { Debug } from "./debug/Debug";
 import { Settings } from "./settings/Settings";
 import { AdventurerInfo } from "./adventurerInfo/AdventurerInfo";
 
@@ -20,23 +19,19 @@ export const MenuSection: React.FC = () => {
           <Tab>装備</Tab>
           <Tab>アイテム</Tab>
           <Tab>設定</Tab>
-          <Tab>デバッグ</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
+          <TabPanel h="full">
             <AdventurerInfo />
           </TabPanel>
-          <TabPanel>
+          <TabPanel h="full">
             <p>b</p>
           </TabPanel>
-          <TabPanel>
+          <TabPanel h="full">
             <p>c</p>
           </TabPanel>
-          <TabPanel>
+          <TabPanel h="full">
             <Settings />
-          </TabPanel>
-          <TabPanel>
-            <Debug />
           </TabPanel>
         </TabPanels>
       </Tabs>
