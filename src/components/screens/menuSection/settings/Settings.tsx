@@ -1,5 +1,5 @@
 import { Button, VStack } from "@yamada-ui/react";
-import { useUpdateUserData } from "../../../../contexts/DataManageProvider";
+import { useUpdateUserData } from "../../../../contexts/DataManagerProvider";
 
 export const Settings: React.FC = () => {
   const { saveUserData: saveGameData } = useUpdateUserData();

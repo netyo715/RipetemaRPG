@@ -30,7 +30,7 @@ const updateUserDataContext = createContext<
 /**
  * 各コンポーネントからデータを管理するためのコンポーネント
  */
-export const DataManageProvider: React.FC<{ children: ReactNode }> = ({
+export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const adventurerData = useAdventurerData();

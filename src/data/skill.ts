@@ -16,8 +16,7 @@ export const SKILL_INFO: SkillInfo = {
     type: "active",
     name: "連続切り",
     detail: "同じ敵を2度切りつける",
-    cooldown: 5000, // TODO
-    rate: 50, // TODO
+    recastTime: 5000, // TODO
     effect: () => {
       // TODO
     },
@@ -26,8 +25,7 @@ export const SKILL_INFO: SkillInfo = {
     type: "active",
     name: "電撃",
     detail: "全ての敵に雷で攻撃する",
-    cooldown: 5000, // TODO,
-    rate: 50, // TODO
+    recastTime: 5000, // TODO,
     effect: () => {
       // TODO
     },

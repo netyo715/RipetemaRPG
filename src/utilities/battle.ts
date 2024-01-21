@@ -2,6 +2,7 @@ import { MONSTER_INFO, MonsterId } from "../data/monster";
 import { SKILL_INFO, SkillId } from "../data/skill";
 import { Adventurer } from "../types/adventurer";
 import { BattleUnit } from "../types/battle";
+import { MonsterPattern } from "../types/dungeon";
 import { ActiveSkill, PassiveSkill } from "../types/skill";
 import { getAdventurerSkillIds, getAdventurerStatus } from "./adventurer";
 import { getRandomId } from "./util";
@@ -47,7 +48,27 @@ export const createBattleUnitFromMonsterId: (
 };
 
 /**
- * スキルIDからバトルユニットのスキル型を返す
+ * 出現率に基づきランダムにモンスターIDを返す
+ * @param monsterPatterns モンスター出現パターン
+ * @returns モンスターID
+ */
+export const getRandomMonsterIdsFromMonsterPattern = (
+  monsterPatterns: MonsterPattern[]
+): MonsterId[] => {
+  let weightSum = 0;
+  monsterPatterns.forEach((pattern) => (weightSum += pattern.weight));
+  let number = Math.random() * weightSum;
+  for (const pattern of monsterPatterns) {
+    number -= pattern.weight;
+    if (number <= 0) {
+      return pattern.monsterIds;
+    }
+  }
+  throw Error;
+};
+
+/**
+ * スキルIDからスキルを返す
  * @param skillIds スキルID
  * @returns スキル
  */

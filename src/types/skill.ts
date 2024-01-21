@@ -18,8 +18,8 @@ export type Skill = ActiveSkill | PassiveSkill;
  */
 export type ActiveSkill = SkillBase & {
   type: "active";
-  cooldown: number;
-  rate: number;
+  firstCastTime?: number;
+  recastTime: number;
   effect: () => void;
 };
 

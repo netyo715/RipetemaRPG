@@ -1,5 +1,4 @@
-import { Status } from "../types/battle";
-import { Gear, GearType } from "../types/gear";
+import { Gear } from "../types/gear";
 
 /**
  * 装備ID
