@@ -1,4 +1,4 @@
-import { DamageDetail } from "./battle";
+import { BattleUnit, DamageDetail } from "./battle";
 
 /**
  * スキルの名前と概要
@@ -14,11 +14,28 @@ export type SkillBase = {
 export type Skill = ActiveSkill | PassiveSkill;
 
 /**
+ * 任意のアクティブアクション
+ */
+export type ActiveAction = ActiveSkill | NormalAttack;
+
+/**
+ * 通常攻撃
+ */
+export type NormalAttack = SkillBase & {
+  type: "normal";
+  recastTime: number;
+  effect: (
+    caster: BattleUnit,
+    allies: BattleUnit[],
+    enemies: BattleUnit[]
+  ) => void;
+};
+
+/**
  * クールダウンを持つスキル
  */
 export type ActiveSkill = SkillBase & {
   type: "active";
-  firstCastTime?: number;
   recastTime: number;
   effect: () => void;
 };
@@ -27,7 +44,7 @@ export type ActiveSkill = SkillBase & {
  * 攻撃時に発動するような副次的なスキル
  */
 export type PassiveSkill = SkillBase & {
-  type: "onAttack" | "onHit" | "onDefence" | "onDamaged";
+  type: "onCast" | "onAttack" | "onHit" | "onDefence" | "onDamaged";
   rate: number;
   effect: (damage: DamageDetail) => DamageDetail;
 };

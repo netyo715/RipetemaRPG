@@ -1,4 +1,4 @@
-import { ActiveSkill, PassiveSkill } from "./skill";
+import { ActiveAction, ActiveSkill, PassiveSkill } from "./skill";
 
 /**
  * バトルで参照するパラメータ
@@ -11,8 +11,8 @@ export type BattleUnit = {
   id: string;
   name: string;
   status: Status & { currentHp: number };
-  skills: {
-    activeSkills: ActiveSkill[];
+  activeActions: ActiveAction[];
+  passiveSkills: {
     onAttackSkills: PassiveSkill[];
     onHitSkills: PassiveSkill[];
     onDefenceSkills: PassiveSkill[];

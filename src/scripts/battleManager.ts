@@ -1,71 +1,81 @@
-import { Updater } from "use-immer";
 import { AdventurerData } from "../types/game";
-import { Area } from "../types/dungeon";
 import { BattleUnit } from "../types/battle";
 import {
   createBattleUnitFromAdventurer,
   createBattleUnitFromMonsterId,
-  getRandomMonsterIdsFromMonsterPattern,
 } from "../utilities/battle";
+import { MonsterId } from "../data/monster";
 
 const TURN_INTERVAL = 1000; //TODO
 
+/**
+ * 戦闘を管理するクラス
+ */
 export class BattleManager {
-  adventurerData: AdventurerData;
   sendLog: (log: string) => void;
-  updateAdventurerData: Updater<AdventurerData>;
+  restart: () => void;
+  onEnd: (isWin: boolean) => void;
 
   turnHandler?: ReturnType<typeof setTimeout> = undefined;
-  area?: Area;
+  isClosed: Boolean = false;
   adventurerUnits: BattleUnit[] = [];
   monsterUnits: BattleUnit[] = [];
 
   constructor(
     adventurerData: AdventurerData,
+    monsterIds: MonsterId[],
     sendLog: (log: string) => void,
-    updateAdventurerData: Updater<AdventurerData> // TODO
+    restart: () => void,
+    onEnd: (isWin: boolean) => void,
   ) {
-    this.adventurerData = adventurerData;
     this.sendLog = sendLog;
-    this.updateAdventurerData = updateAdventurerData; // TODO
+    this.restart = restart;
+    this.onEnd = onEnd;
+
+    this.adventurerUnits = adventurerData.map((adventurer) =>
+      createBattleUnitFromAdventurer(adventurer)
+    );
+    this.monsterUnits = monsterIds.map((monsterId) =>
+      createBattleUnitFromMonsterId(monsterId)
+    );
+
+    this.run();
   }
 
   /**
    * 各フレーム毎の処理
    */
-  turn() {
-    this.turnHandler = setTimeout(this.turn.bind(this), TURN_INTERVAL);
-  }
+  private turn() {
+    if (this.isClosed) return;
+    // アクション等
+    
+    // 戦闘終了判定
 
-  /**
-   * 終了時処理
-   */
-  onEnd() {
-    this.close();
-    if (this.area) {
-      this.run(this.area);
-    }
+    // 次のフレーム
+    this.turnHandler = setTimeout(this.turn.bind(this), TURN_INTERVAL);
   }
 
   /**
    * 戦闘を開始する
-   * @param area エリア
    */
-  run(area: Area) {
-    this.area = area;
-    this.adventurerUnits = this.adventurerData.map((adventurer) =>
-      createBattleUnitFromAdventurer(adventurer)
-    );
-    this.monsterUnits = getRandomMonsterIdsFromMonsterPattern(
-      area.monsterPatterns
-    ).map((monsterId) => createBattleUnitFromMonsterId(monsterId));
+  run() {
     this.turnHandler = setTimeout(this.turn.bind(this), TURN_INTERVAL);
   }
 
   /**
-   * 戦闘を終了する
+   * 勝敗処理
+   */
+  end(isWin: boolean) {
+    this.onEnd(isWin);
+    this.close();
+    this.restart();
+  }
+
+  /**
+   * 戦闘終了
    */
   close() {
+    this.isClosed = true;
     clearTimeout(this.turnHandler);
   }
 }

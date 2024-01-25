@@ -3,25 +3,30 @@ import { SKILL_INFO, SkillId } from "../data/skill";
 import { Adventurer } from "../types/adventurer";
 import { BattleUnit } from "../types/battle";
 import { MonsterPattern } from "../types/dungeon";
-import { ActiveSkill, PassiveSkill } from "../types/skill";
+import { ActiveSkill, NormalAttack, PassiveSkill } from "../types/skill";
 import { getAdventurerSkillIds, getAdventurerStatus } from "./adventurer";
-import { getRandomId } from "./util";
+import { getRandomId, getRandomValue } from "./util";
 
 /**
  * 冒険者から戦闘ユニットオブジェクトを作成する
  * @param adventurer 冒険者
  * @returns 戦闘ユニットオブジェクト
  */
-export const createBattleUnitFromAdventurer: (
+export const createBattleUnitFromAdventurer = (
   adventurer: Adventurer
-) => BattleUnit = (adventurer) => {
+): BattleUnit => {
   const status = getAdventurerStatus(adventurer);
   const skillIds = getAdventurerSkillIds(adventurer);
+  const [activeSkills, passiveSkills] = getBattleUnitSkills(skillIds);
   const unit: BattleUnit = {
     id: getRandomId(),
     name: adventurer.name,
     status: { currentHp: status.hp, ...status },
-    skills: getBattleUnitSkills(skillIds),
+    activeActions: [
+      getNormalAttack(adventurer.name, status.spd),
+      ...activeSkills,
+    ],
+    passiveSkills: passiveSkills,
     isAlive: true,
   };
   return unit;
@@ -32,16 +37,21 @@ export const createBattleUnitFromAdventurer: (
  * @param monsterId モンスターのID
  * @returns 戦闘ユニットオブジェクト
  */
-export const createBattleUnitFromMonsterId: (
+export const createBattleUnitFromMonsterId = (
   monsterId: MonsterId
-) => BattleUnit = (monsterId) => {
+): BattleUnit => {
   const monster = MONSTER_INFO[monsterId];
   const skillIds = monster.skillIds;
+  const [activeSkills, passiveSkills] = getBattleUnitSkills(skillIds);
   const unit: BattleUnit = {
     id: getRandomId(),
     name: monster.name,
     status: { currentHp: monster.status.hp, ...monster.status },
-    skills: getBattleUnitSkills(skillIds),
+    activeActions: [
+      getNormalAttack(monster.name, monster.status.spd),
+      ...activeSkills,
+    ],
+    passiveSkills: passiveSkills,
     isAlive: true,
   };
   return unit;
@@ -72,13 +82,17 @@ export const getRandomMonsterIdsFromMonsterPattern = (
  * @param skillIds スキルID
  * @returns スキル
  */
-const getBattleUnitSkills: (skillIds: SkillId[]) => {
-  activeSkills: ActiveSkill[];
-  onAttackSkills: PassiveSkill[];
-  onHitSkills: PassiveSkill[];
-  onDefenceSkills: PassiveSkill[];
-  onDamagedSkills: PassiveSkill[];
-} = (skillIds) => {
+export const getBattleUnitSkills = (
+  skillIds: SkillId[]
+): [
+  ActiveSkill[],
+  {
+    onAttackSkills: PassiveSkill[];
+    onHitSkills: PassiveSkill[];
+    onDefenceSkills: PassiveSkill[];
+    onDamagedSkills: PassiveSkill[];
+  }
+] => {
   let activeSkills: ActiveSkill[] = [];
   let onAttackSkills: PassiveSkill[] = [];
   let onHitSkills: PassiveSkill[] = [];
@@ -106,11 +120,39 @@ const getBattleUnitSkills: (skillIds: SkillId[]) => {
         break;
     }
   }
-  return {
-    activeSkills: activeSkills,
-    onAttackSkills: onAttackSkills,
-    onHitSkills: onHitSkills,
-    onDefenceSkills: onDefenceSkills,
-    onDamagedSkills: onDamagedSkills,
+  return [
+    activeSkills,
+    {
+      onAttackSkills: onAttackSkills,
+      onHitSkills: onHitSkills,
+      onDefenceSkills: onDefenceSkills,
+      onDamagedSkills: onDamagedSkills,
+    },
+  ];
+};
+
+export const getNormalAttack = (name: string, spd: number): NormalAttack => {
+  let attack: NormalAttack = {
+    name: "通常攻撃",
+    detail: "最も基本的な攻撃",
+    type: "normal",
+    recastTime: 5000 - spd * 40, // TODO 攻撃速度調整
+    effect: (
+      caster: BattleUnit,
+      allies: BattleUnit[],
+      enemies: BattleUnit[]
+    ) => {
+      // 相手を抽選する
+      const target = getRandomValue(enemies);
+      // 基本ダメージを決める
+      const damage = caster.status.atk;
+      // onCast発動
+      // onAttack発動
+      // 相手のonDefence発動
+      // onHit発動
+      // 相手のonDamaged発動
+      // ログ出力
+    }, //TODO 書く
   };
+  return attack;
 };

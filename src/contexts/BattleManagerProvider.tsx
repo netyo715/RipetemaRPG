@@ -1,4 +1,11 @@
-import { ReactNode, createContext, useContext, useEffect, useRef } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useImmer } from "use-immer";
 import {
   useAdventurerData,
@@ -8,6 +15,8 @@ import {
 } from "./UserDataProvider";
 import { BattleManager } from "../scripts/battleManager";
 import { Area } from "../types/dungeon";
+import { getRandomMonsterIdsFromMonsterPattern } from "../utilities/battle";
+import { MonsterId } from "../data/monster";
 
 //TODO
 type BattleManagerContextProps = {
@@ -15,6 +24,8 @@ type BattleManagerContextProps = {
   closeBattle: () => void;
   battleLog: string[];
 };
+
+export type BattleState = "battling" | "waitingRestart" | "closed";
 
 const battleManagerContext = createContext<
   BattleManagerContextProps | undefined
@@ -30,40 +41,71 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
   const updateGameData = useUpdateGameData();
 
   const battleManagerRef = useRef<BattleManager>();
+  const areaRef = useRef<Area>();
+  const monsterIdsRef = useRef<MonsterId[]>();
   const [battleLog, updateBattleLog] = useImmer<string[]>([]);
+  const [battleState, setBattleState] = useState<BattleState>("closed");
 
   useEffect(() => {
-    if (battleManagerRef.current) {
-      battleManagerRef.current.adventurerData = adventurerData;
+    // リスタート
+    if (
+      battleState === "waitingRestart" &&
+      battleManagerRef.current?.isClosed &&
+      areaRef.current
+    ) {
+      startBattle(areaRef.current);
     }
-  }, [adventurerData]);
+  }, [battleState]);
 
-  // TODO
   const startBattle = (area: Area): void => {
-    if (battleManagerRef.current) {
+    if (battleState === "battling") {
       return;
     }
+    setBattleState("battling");
+    areaRef.current = area;
+    monsterIdsRef.current = getRandomMonsterIdsFromMonsterPattern(
+      area.monsterPatterns
+    );
     battleManagerRef.current = new BattleManager(
       adventurerData,
+      monsterIdsRef.current,
       sendLog,
-      updateAdventurerData
+      restart,
+      onEnd
     );
-    battleManagerRef.current.run(area);
   };
 
   const closeBattle = (): void => {
+    setBattleState("closed");
     if (battleManagerRef.current) {
       battleManagerRef.current.close();
       battleManagerRef.current = undefined;
-      updateBattleLog((draft) => []);
+      updateBattleLog(() => []);
+      // TODO 他の初期化処理
     }
   };
 
+  /**
+   * 戦闘クラスに渡すログ出力関数
+   * @param text
+   */
   const sendLog = (text: string): void => {
     updateBattleLog((draft) => {
       draft.push(text);
       return;
     });
+  };
+
+  /**
+   * 戦闘
+   * @param isWin
+   */
+  const onEnd = (isWin: boolean): void => {
+    // TODO 勝利なら経験値等の処理
+  };
+
+  const restart = (): void => {
+    setBattleState("waitingRestart");
   };
 
   const providerValue: BattleManagerContextProps = {
