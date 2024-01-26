@@ -17,6 +17,7 @@ export const SKILL_INFO: SkillInfo = {
     name: "連続切り",
     detail: "同じ敵を2度切りつける",
     recastTime: 5000, // TODO
+    remainingRecastTime: 5000,
     effect: () => {
       // TODO
     },
@@ -26,6 +27,7 @@ export const SKILL_INFO: SkillInfo = {
     name: "電撃",
     detail: "全ての敵に雷で攻撃する",
     recastTime: 5000, // TODO,
+    remainingRecastTime: 5000,
     effect: () => {
       // TODO
     },

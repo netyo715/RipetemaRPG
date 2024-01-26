@@ -18,6 +18,7 @@ export type BattleUnit = {
     onDefenceSkills: PassiveSkill[];
     onDamagedSkills: PassiveSkill[];
   };
+  isAdventurer: boolean;
   isAlive: boolean;
 };
 

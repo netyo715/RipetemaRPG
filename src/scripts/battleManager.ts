@@ -26,7 +26,7 @@ export class BattleManager {
     monsterIds: MonsterId[],
     sendLog: (log: string) => void,
     restart: () => void,
-    onEnd: (isWin: boolean) => void,
+    onEnd: (isWin: boolean) => void
   ) {
     this.sendLog = sendLog;
     this.restart = restart;
@@ -47,9 +47,52 @@ export class BattleManager {
    */
   private turn() {
     if (this.isClosed) return;
-    // アクション等
-    
+
+    // アクション
+    let remainingTime: number = 0; // このフレームで処理する時間の残り
+    while (remainingTime > 0) {
+      // 処理する時間
+      // 一番早いアクションの時間とTURN_INTERVALの残りのmin
+      const elapsedTime = Math.min(
+        remainingTime,
+        ...[...this.adventurerUnits, ...this.monsterUnits]
+          .filter((unit) => unit.isAlive)
+          .map((unit) =>
+            Math.min(
+              ...unit.activeActions.map((action) => action.remainingRecastTime)
+            )
+          )
+      );
+      // アクション実行
+      // スキルが途中で増減したりリキャストタイムが変わったら壊れるかも
+      [...this.adventurerUnits, ...this.monsterUnits]
+        .filter((unit) => unit.isAlive)
+        .forEach((unit) => {
+          unit.activeActions.forEach((action) => {
+            action.remainingRecastTime -= elapsedTime;
+            // 残りリキャストタイムが0になったら
+            if (action.remainingRecastTime <= 0) {
+              if (unit.isAdventurer) {
+                action.effect(unit, this.adventurerUnits, this.monsterUnits);
+              } else {
+                action.effect(unit, this.monsterUnits, this.adventurerUnits);
+              }
+            }
+          });
+        });
+    }
+
     // 戦闘終了判定
+    // 勝利
+    if (this.monsterUnits.every((unit) => !unit.isAlive)) {
+      this.end(true);
+      return;
+    }
+    // 敗北
+    if (this.adventurerUnits.every((unit) => !unit.isAlive)) {
+      this.end(false);
+      return;
+    }
 
     // 次のフレーム
     this.turnHandler = setTimeout(this.turn.bind(this), TURN_INTERVAL);

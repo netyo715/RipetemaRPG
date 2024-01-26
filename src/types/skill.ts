@@ -24,6 +24,7 @@ export type ActiveAction = ActiveSkill | NormalAttack;
 export type NormalAttack = SkillBase & {
   type: "normal";
   recastTime: number;
+  remainingRecastTime: number;
   effect: (
     caster: BattleUnit,
     allies: BattleUnit[],
@@ -37,14 +38,14 @@ export type NormalAttack = SkillBase & {
 export type ActiveSkill = SkillBase & {
   type: "active";
   recastTime: number;
+  remainingRecastTime: number;
   effect: () => void;
 };
 
 /**
- * 攻撃時に発動するような副次的なスキル
+ * アクション時に発動する副次的なスキル
  */
 export type PassiveSkill = SkillBase & {
   type: "onCast" | "onAttack" | "onHit" | "onDefence" | "onDamaged";
-  rate: number;
   effect: (damage: DamageDetail) => DamageDetail;
 };

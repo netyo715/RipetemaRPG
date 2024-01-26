@@ -27,6 +27,7 @@ export const createBattleUnitFromAdventurer = (
       ...activeSkills,
     ],
     passiveSkills: passiveSkills,
+    isAdventurer: true,
     isAlive: true,
   };
   return unit;
@@ -52,6 +53,7 @@ export const createBattleUnitFromMonsterId = (
       ...activeSkills,
     ],
     passiveSkills: passiveSkills,
+    isAdventurer: false,
     isAlive: true,
   };
   return unit;
@@ -131,12 +133,19 @@ export const getBattleUnitSkills = (
   ];
 };
 
+/**
+ * 通常攻撃
+ * @param name ユニットの名前(ログ出力用)
+ * @param spd 素早さ(リキャストタイム計算用)
+ * @returns 通常攻撃
+ */
 export const getNormalAttack = (name: string, spd: number): NormalAttack => {
   let attack: NormalAttack = {
     name: "通常攻撃",
     detail: "最も基本的な攻撃",
     type: "normal",
     recastTime: 5000 - spd * 40, // TODO 攻撃速度調整
+    remainingRecastTime: 5000 - spd * 40,
     effect: (
       caster: BattleUnit,
       allies: BattleUnit[],
@@ -149,6 +158,7 @@ export const getNormalAttack = (name: string, spd: number): NormalAttack => {
       // onCast発動
       // onAttack発動
       // 相手のonDefence発動
+      // ダメージ与える
       // onHit発動
       // 相手のonDamaged発動
       // ログ出力
