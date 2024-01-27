@@ -28,7 +28,8 @@ export type NormalAttack = SkillBase & {
   effect: (
     caster: BattleUnit,
     allies: BattleUnit[],
-    enemies: BattleUnit[]
+    enemies: BattleUnit[],
+    sendLog: (log: string) => void
   ) => void;
 };
 
@@ -39,7 +40,12 @@ export type ActiveSkill = SkillBase & {
   type: "active";
   recastTime: number;
   remainingRecastTime: number;
-  effect: () => void;
+  effect: (
+    caster: BattleUnit,
+    allies: BattleUnit[],
+    enemies: BattleUnit[],
+    sendLog: (log: string) => void
+  ) => void;
 };
 
 /**

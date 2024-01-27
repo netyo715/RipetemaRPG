@@ -1,7 +1,7 @@
 import { MONSTER_INFO, MonsterId } from "../data/monster";
 import { SKILL_INFO, SkillId } from "../data/skill";
 import { Adventurer } from "../types/adventurer";
-import { BattleUnit } from "../types/battle";
+import { BattleUnit, DamageDetail } from "../types/battle";
 import { MonsterPattern } from "../types/dungeon";
 import { ActiveSkill, NormalAttack, PassiveSkill } from "../types/skill";
 import { getAdventurerSkillIds, getAdventurerStatus } from "./adventurer";
@@ -149,20 +149,57 @@ export const getNormalAttack = (name: string, spd: number): NormalAttack => {
     effect: (
       caster: BattleUnit,
       allies: BattleUnit[],
-      enemies: BattleUnit[]
+      enemies: BattleUnit[],
+      sendLog: (log: string) => void
     ) => {
       // 相手を抽選する
       const target = getRandomValue(enemies);
       // 基本ダメージを決める
-      const damage = caster.status.atk;
+      const damageDetail: DamageDetail = {
+        isCritical: false,
+        isSkill: false,
+        damages: [
+          { isSkill: false, physicalDamage: caster.status.atk, magicDamage: 0 },
+        ],
+      };
+      // クリティカル判定
       // onCast発動
       // onAttack発動
       // 相手のonDefence発動
       // ダメージ与える
+      sendLog(`${caster.name}の通常攻撃`);
+      let reducedHp = causeDamage(target, damageDetail);
+      sendLog(`${target.name}に${reducedHp}ダメージ`);
       // onHit発動
+      if (!target.isAlive) {
+        sendLog(`${target.name}は倒れた`);
+      }
       // 相手のonDamaged発動
       // ログ出力
     }, //TODO 書く
   };
   return attack;
+};
+
+/**
+ * ダメージ処理
+ * @param unit ダメージを受けるユニット
+ * @param damageDetail ダメージ
+ * @returns 実際に与えたダメージ
+ */
+export const causeDamage = (
+  unit: BattleUnit,
+  damageDetail: DamageDetail
+): number => {
+  let damageSum = 0;
+  damageDetail.damages.forEach((damage) => {
+    // TODO 防御やクリティカルを考慮したダメージ計算
+    damageSum += damage.physicalDamage;
+    damageSum -= damage.magicDamage;
+  });
+  unit.status.currentHp = Math.max(unit.status.currentHp - damageSum, 0);
+  if (unit.status.currentHp <= 0) {
+    unit.isAlive = false;
+  }
+  return damageSum;
 };

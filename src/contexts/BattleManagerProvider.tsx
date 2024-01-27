@@ -102,6 +102,7 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
    */
   const onEnd = (isWin: boolean): void => {
     // TODO 勝利なら経験値等の処理
+    sendLog(`${isWin ? "勝利" : "敗北"}`);
   };
 
   const restart = (): void => {

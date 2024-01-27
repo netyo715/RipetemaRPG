@@ -17,7 +17,7 @@ export const getRequiredExperience: (level: number) => number = (level) => {
 export const getBaseStatus: (level: number) => Status = (level) => {
   // TODO 仮
   const ret: Status = {
-    hp: level,
+    hp: level * 50,
     atk: level,
     def: level,
     mat: level,

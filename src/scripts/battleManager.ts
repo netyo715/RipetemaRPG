@@ -49,7 +49,7 @@ export class BattleManager {
     if (this.isClosed) return;
 
     // アクション
-    let remainingTime: number = 0; // このフレームで処理する時間の残り
+    let remainingTime: number = TURN_INTERVAL; // このフレームで処理する時間の残り
     while (remainingTime > 0) {
       // 処理する時間
       // 一番早いアクションの時間とTURN_INTERVALの残りのmin
@@ -63,6 +63,7 @@ export class BattleManager {
             )
           )
       );
+      remainingTime -= elapsedTime;
       // アクション実行
       // スキルが途中で増減したりリキャストタイムが変わったら壊れるかも
       [...this.adventurerUnits, ...this.monsterUnits]
@@ -72,15 +73,28 @@ export class BattleManager {
             action.remainingRecastTime -= elapsedTime;
             // 残りリキャストタイムが0になったら
             if (action.remainingRecastTime <= 0) {
+              action.remainingRecastTime = action.recastTime;
               if (unit.isAdventurer) {
-                action.effect(unit, this.adventurerUnits, this.monsterUnits);
+                action.effect(
+                  unit,
+                  this.adventurerUnits,
+                  this.monsterUnits,
+                  this.sendLog
+                );
               } else {
-                action.effect(unit, this.monsterUnits, this.adventurerUnits);
+                action.effect(
+                  unit,
+                  this.monsterUnits,
+                  this.adventurerUnits,
+                  this.sendLog
+                );
               }
             }
           });
         });
     }
+
+    // 描画
 
     // 戦闘終了判定
     // 勝利
