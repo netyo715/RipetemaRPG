@@ -23,6 +23,7 @@ type BattleManagerContextProps = {
   startBattle: (area: Area) => void;
   closeBattle: () => void;
   battleLog: string[];
+  battleState: BattleState;
 };
 
 export type BattleState = "battling" | "waitingRestart" | "closed";
@@ -113,6 +114,7 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
     startBattle: startBattle,
     closeBattle: closeBattle,
     battleLog: battleLog,
+    battleState: battleState,
   };
   return (
     <battleManagerContext.Provider value={providerValue}>
