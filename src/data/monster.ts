@@ -25,6 +25,7 @@ export const MONSTER_INFO: MonsterInfo = {
       spd: 3,
       hst: 0,
       crt: 0,
+      hat: 1,
     },
     skillIds: [],
     experience: 1,

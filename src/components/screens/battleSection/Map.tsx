@@ -16,12 +16,17 @@ export const Map: React.FC = () => {
       <Accordion isMultiple>
         {DUNGEONS.map((dungeon) => {
           return (
-            <AccordionItem label={dungeon.name}>
+            <AccordionItem key={dungeon.name} label={dungeon.name}>
               <AccordionPanel p="sm">
                 <VStack gap="sm">
                   {dungeon.areas.map((area) => {
                     return (
-                      <Button variant="ghost" justifyContent="start" onClick={() => startBattle(area)}>
+                      <Button
+                        key={area.name}
+                        variant="ghost"
+                        justifyContent="start"
+                        onClick={() => startBattle(area)}
+                      >
                         {area.name}
                       </Button>
                     );

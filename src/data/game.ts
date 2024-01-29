@@ -13,6 +13,11 @@ export const GAME_VERSION = "0.0.0";
 export const AUTO_SAVE_INTERVAL = 4000; // TODO デバッグ用
 
 /**
+ * ログの最大行数
+ */
+export const LOG_LINE_MAX = 50;
+
+/**
  * 冒険者データの初期値
  */
 export const INITIAL_ADVENTURER_DATA: AdventurerData = [

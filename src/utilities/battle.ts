@@ -153,7 +153,7 @@ export const getNormalAttack = (name: string, spd: number): NormalAttack => {
       sendLog: (log: string) => void
     ) => {
       // 相手を抽選する
-      const target = getRandomValue(enemies);
+      const target = getRandomUnitWithHat(enemies);
       // 基本ダメージを決める
       const damageDetail: DamageDetail = {
         isCritical: false,
@@ -202,4 +202,20 @@ export const causeDamage = (
     unit.isAlive = false;
   }
   return damageSum;
+};
+
+/**
+ * hat(狙われやすさ)を考慮してユニットを返す
+ * @param units
+ * @returns
+ */
+export const getRandomUnitWithHat = (units: BattleUnit[]): BattleUnit => {
+  let hatSum = 0;
+  units.forEach((unit) => (hatSum += unit.status.hat));
+  let num = Math.random() * hatSum;
+  for (const unit of units) {
+    num -= unit.status.hat;
+    if (num < 0) return unit;
+  }
+  throw Error;
 };

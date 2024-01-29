@@ -66,6 +66,7 @@ const mergeStatus: (...statuses: Partial<Status>[]) => Status = (
     spd: 0,
     hst: 0,
     crt: 0,
+    hat: 0,
   };
   statuses.forEach((status) => {
     for (const key of Object.keys(status) as (keyof Status)[]) {

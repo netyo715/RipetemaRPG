@@ -65,6 +65,7 @@ const JOB_STATUS_INFO: JobStatusInfo = {
       spd: level,
       hst: level,
       crt: level,
+      hat: 0,
     };
     return ret;
   },
@@ -79,6 +80,7 @@ const JOB_STATUS_INFO: JobStatusInfo = {
       spd: level,
       hst: level,
       crt: level,
+      hat: 10,
     };
     return ret;
   },
@@ -93,6 +95,7 @@ const JOB_STATUS_INFO: JobStatusInfo = {
       spd: level,
       hst: level,
       crt: level,
+      hat: 0,
     };
     return ret;
   },

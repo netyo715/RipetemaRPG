@@ -32,6 +32,7 @@ export type BattleUnit = {
  * @param spd 通常攻撃速度
  * @param hst スキル発動速度
  * @param crt クリティカル率
+ * @param hat 狙われやすさ
  */
 export type Status = {
   hp: number;
@@ -42,6 +43,7 @@ export type Status = {
   spd: number;
   hst: number;
   crt: number;
+  hat: number;
 };
 
 /**

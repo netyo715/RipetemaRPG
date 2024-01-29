@@ -25,6 +25,7 @@ export const getBaseStatus: (level: number) => Status = (level) => {
     spd: level,
     hst: level,
     crt: level,
+    hat: 10,
   };
   return ret;
 };

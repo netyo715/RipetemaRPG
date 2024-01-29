@@ -17,6 +17,7 @@ import { BattleManager } from "../scripts/battleManager";
 import { Area } from "../types/dungeon";
 import { getRandomMonsterIdsFromMonsterPattern } from "../utilities/battle";
 import { MonsterId } from "../data/monster";
+import { LOG_LINE_MAX } from "../data/game";
 
 //TODO
 type BattleManagerContextProps = {
@@ -92,7 +93,8 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
    */
   const sendLog = (text: string): void => {
     updateBattleLog((draft) => {
-      draft.push(text);
+      draft.unshift(text);
+      if (draft.length > LOG_LINE_MAX) draft.pop();
       return;
     });
   };

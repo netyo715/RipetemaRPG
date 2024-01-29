@@ -6,7 +6,7 @@ import {
 } from "../utilities/battle";
 import { MonsterId } from "../data/monster";
 
-const TURN_INTERVAL = 1000; //TODO
+const TURN_INTERVAL = 50;
 
 /**
  * 戦闘を管理するクラス

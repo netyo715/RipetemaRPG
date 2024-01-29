@@ -8,7 +8,7 @@ import {
 import { useBattleManager } from "../../../contexts/BattleManagerProvider";
 
 export const BattleView: React.FC = () => {
-  const { startBattle, closeBattle, battleLog } = useBattleManager();
+  const { closeBattle, battleLog } = useBattleManager();
   return (
     <VStack h="full">
       <HStack>

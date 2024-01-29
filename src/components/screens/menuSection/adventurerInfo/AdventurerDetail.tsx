@@ -151,6 +151,10 @@ export const AdventurerDetail: React.FC<{
           <Text>CRT</Text>
           <Text>{status.crt}</Text>
         </SpacingRow>
+        <SpacingRow>
+          <Text>HAT</Text>
+          <Text>{status.hat}</Text>
+        </SpacingRow>
       </ScrollArea>
     </Flex>
   );
