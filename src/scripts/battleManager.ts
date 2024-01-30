@@ -1,18 +1,25 @@
 import { AdventurerData } from "../types/game";
-import { BattleUnit } from "../types/battle";
+import { BattleUnit, BattleUnitForView } from "../types/battle";
 import {
   createBattleUnitFromAdventurer,
   createBattleUnitFromMonsterId,
 } from "../utilities/battle";
 import { MonsterId } from "../data/monster";
+import { Dispatch, SetStateAction } from "react";
 
-const TURN_INTERVAL = 50;
+const TURN_INTERVAL = 100;
 
 /**
  * 戦闘を管理するクラス
  */
 export class BattleManager {
   sendLog: (log: string) => void;
+  setAdventurerUnitForViews: Dispatch<
+    SetStateAction<BattleUnitForView[] | undefined>
+  >;
+  setMonsterUnitForViews: Dispatch<
+    SetStateAction<BattleUnitForView[] | undefined>
+  >;
   restart: () => void;
   onEnd: (isWin: boolean) => void;
 
@@ -25,10 +32,18 @@ export class BattleManager {
     adventurerData: AdventurerData,
     monsterIds: MonsterId[],
     sendLog: (log: string) => void,
+    setAdventurerUnitForViews: Dispatch<
+      SetStateAction<BattleUnitForView[] | undefined>
+    >,
+    setMonsterUnitForViews: Dispatch<
+      SetStateAction<BattleUnitForView[] | undefined>
+    >,
     restart: () => void,
     onEnd: (isWin: boolean) => void
   ) {
     this.sendLog = sendLog;
+    this.setAdventurerUnitForViews = setAdventurerUnitForViews;
+    this.setMonsterUnitForViews = setMonsterUnitForViews;
     this.restart = restart;
     this.onEnd = onEnd;
 
@@ -95,6 +110,7 @@ export class BattleManager {
     }
 
     // 描画
+    this.view();
 
     // 戦闘終了判定
     // 勝利
@@ -116,7 +132,32 @@ export class BattleManager {
    * 戦闘を開始する
    */
   run() {
+    this.view();
     this.turnHandler = setTimeout(this.turn.bind(this), TURN_INTERVAL);
+  }
+
+  /**
+   * 描画更新
+   */
+  view() {
+    this.setAdventurerUnitForViews(
+      this.adventurerUnits.map((unit) => {
+        return {
+          name: unit.name,
+          hp: unit.status.hp,
+          currentHp: unit.status.currentHp,
+        };
+      })
+    );
+    this.setMonsterUnitForViews(
+      this.monsterUnits.map((unit) => {
+        return {
+          name: unit.name,
+          hp: unit.status.hp,
+          currentHp: unit.status.currentHp,
+        };
+      })
+    );
   }
 
   /**

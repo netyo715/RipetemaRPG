@@ -23,6 +23,18 @@ export type BattleUnit = {
 };
 
 /**
+ * 表示用ユニットデータ
+ * @param name 名前
+ * @param hp 最大HP
+ * @param currentHp 現在HP
+ */
+export type BattleUnitForView = {
+  name: string;
+  hp: number;
+  currentHp: number;
+};
+
+/**
  * ステータス
  * @param hp 最大体力
  * @param atk 物理攻撃力

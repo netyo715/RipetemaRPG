@@ -1,20 +1,39 @@
 import {
   CloseButton,
   HStack,
+  Heading,
   ScrollArea,
   Spacer,
+  Text,
   VStack,
 } from "@yamada-ui/react";
 import { useBattleManager } from "../../../contexts/BattleManagerProvider";
 
 export const BattleView: React.FC = () => {
-  const { closeBattle, battleLog } = useBattleManager();
+  const { closeBattle, battleLog, battleInfo } = useBattleManager();
   return (
-    <VStack h="full">
+    <VStack h="full" p="md">
       <HStack>
+        <Heading>{battleInfo?.area.name}</Heading>
         <Spacer />
         <CloseButton onClick={closeBattle} />
       </HStack>
+      <VStack>
+        {battleInfo?.adventurerUnitForViews.map((unit, index) => {
+          return (
+            <Text key={"a" + index}>
+              {unit.name}: {unit.currentHp}/{unit.hp}
+            </Text>
+          );
+        })}
+        {battleInfo?.monsterUnitForViews.map((unit, index) => {
+          return (
+            <Text key={"m" + index}>
+              {unit.name}: {unit.currentHp}/{unit.hp}
+            </Text>
+          );
+        })}
+      </VStack>
       <ScrollArea
         p="md"
         type="always"

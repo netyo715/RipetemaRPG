@@ -18,6 +18,7 @@ import { Area } from "../types/dungeon";
 import { getRandomMonsterIdsFromMonsterPattern } from "../utilities/battle";
 import { MonsterId } from "../data/monster";
 import { LOG_LINE_MAX } from "../data/game";
+import { BattleUnitForView } from "../types/battle";
 
 //TODO
 type BattleManagerContextProps = {
@@ -25,6 +26,11 @@ type BattleManagerContextProps = {
   closeBattle: () => void;
   battleLog: string[];
   battleState: BattleState;
+  battleInfo?: {
+    area: Area;
+    adventurerUnitForViews: BattleUnitForView[];
+    monsterUnitForViews: BattleUnitForView[];
+  };
 };
 
 export type BattleState = "battling" | "waitingRestart" | "closed";
@@ -43,19 +49,25 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
   const updateGameData = useUpdateGameData();
 
   const battleManagerRef = useRef<BattleManager>();
-  const areaRef = useRef<Area>();
   const monsterIdsRef = useRef<MonsterId[]>();
   const [battleLog, updateBattleLog] = useImmer<string[]>([]);
   const [battleState, setBattleState] = useState<BattleState>("closed");
+  const [area, setArea] = useState<Area | undefined>(undefined);
+  const [adventurerUnitForViews, setAdventurerUnitForViews] = useState<
+    BattleUnitForView[] | undefined
+  >(undefined);
+  const [monsterUnitForViews, setMonsterUnitForViews] = useState<
+    BattleUnitForView[] | undefined
+  >(undefined);
 
   useEffect(() => {
     // リスタート
     if (
       battleState === "waitingRestart" &&
       battleManagerRef.current?.isClosed &&
-      areaRef.current
+      area !== undefined
     ) {
-      startBattle(areaRef.current);
+      startBattle(area);
     }
   }, [battleState]);
 
@@ -63,8 +75,7 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
     if (battleState === "battling") {
       return;
     }
-    setBattleState("battling");
-    areaRef.current = area;
+    setArea(area);
     monsterIdsRef.current = getRandomMonsterIdsFromMonsterPattern(
       area.monsterPatterns
     );
@@ -72,9 +83,12 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
       adventurerData,
       monsterIdsRef.current,
       sendLog,
+      setAdventurerUnitForViews,
+      setMonsterUnitForViews,
       restart,
       onEnd
     );
+    setBattleState("battling");
   };
 
   const closeBattle = (): void => {
@@ -83,6 +97,9 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
       battleManagerRef.current.close();
       battleManagerRef.current = undefined;
       updateBattleLog(() => []);
+      setArea(undefined);
+      setAdventurerUnitForViews(undefined);
+      setMonsterUnitForViews(undefined);
       // TODO 他の初期化処理
     }
   };
@@ -112,12 +129,19 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
     setBattleState("waitingRestart");
   };
 
-  const providerValue: BattleManagerContextProps = {
+  let providerValue: BattleManagerContextProps = {
     startBattle: startBattle,
     closeBattle: closeBattle,
     battleLog: battleLog,
     battleState: battleState,
   };
+  if (area && adventurerUnitForViews && monsterUnitForViews) {
+    providerValue.battleInfo = {
+      area: area,
+      adventurerUnitForViews: adventurerUnitForViews,
+      monsterUnitForViews: monsterUnitForViews,
+    };
+  }
   return (
     <battleManagerContext.Provider value={providerValue}>
       {children}
