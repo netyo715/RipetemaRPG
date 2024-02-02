@@ -11,6 +11,8 @@ import {
   useUpdateItemData,
 } from "./UserDataProvider";
 import { AdventurerData, GameData, GearData, ItemData } from "../types/game";
+import { getRequiredExperience } from "../data/adventurer";
+import { getJobRequiredExperience } from "../data/job";
 
 type UpdateUserDataContextProps = {
   saveUserData: () => void;
@@ -20,6 +22,7 @@ type UpdateUserDataContextProps = {
     itemData: ItemData,
     gameData: GameData
   ) => void;
+  addAdventurerExperience: (index: number, experience: number) => void;
   changeItemAmount: (itemId: ItemId, amount: number) => void;
 };
 
@@ -90,9 +93,39 @@ export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
     });
   };
 
+  const addAdventurerExperience = (index: number, experience: number): void => {
+    updateAdventurerData((draft) => {
+      const adventurer = draft[index];
+      // 冒険者レベル
+      adventurer.experience += experience;
+      let requiredExperience = getRequiredExperience(adventurer.level);
+      while (adventurer.experience >= requiredExperience) {
+        adventurer.experience -= requiredExperience;
+        adventurer.level++;
+        requiredExperience = getRequiredExperience(adventurer.level);
+      }
+      // 職業レベル
+      const job = adventurer.jobInfo[adventurer.currentJobId]!;
+      job.experience += experience;
+      let requiredJobExperience = getJobRequiredExperience(
+        adventurer.currentJobId,
+        job.level
+      );
+      while (job.experience >= requiredJobExperience) {
+        job.experience -= requiredJobExperience;
+        job.level++;
+        requiredJobExperience = getJobRequiredExperience(
+          adventurer.currentJobId,
+          job.level
+        );
+      }
+    });
+  };
+
   const contextValue: UpdateUserDataContextProps = {
     saveUserData: saveUserData,
     loadUserData: loadUserData,
+    addAdventurerExperience: addAdventurerExperience,
     changeItemAmount: changeItemAmount,
   };
 

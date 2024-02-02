@@ -7,18 +7,15 @@ import {
   useState,
 } from "react";
 import { useImmer } from "use-immer";
-import {
-  useAdventurerData,
-  useUpdateAdventurerData,
-  useUpdateGameData,
-  useUpdateItemData,
-} from "./UserDataProvider";
+import { useAdventurerData } from "./UserDataProvider";
 import { BattleManager } from "../scripts/battleManager";
 import { Area } from "../types/dungeon";
 import { getRandomMonsterIdsFromMonsterPattern } from "../scripts/battle";
-import { MonsterId } from "../data/monster";
+import { MONSTER_INFO, MonsterId } from "../data/monster";
 import { LOG_LINE_MAX } from "../data/game";
 import { BattleUnitForView } from "../types/battle";
+import { useUpdateUserData } from "./DataManagerProvider";
+import { sum } from "../scripts/util";
 
 //TODO
 type BattleManagerContextProps = {
@@ -43,10 +40,7 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const adventurerData = useAdventurerData();
-  const updateAdventurerData = useUpdateAdventurerData();
-  const updateGearData = useUpdateAdventurerData();
-  const updateItemData = useUpdateItemData();
-  const updateGameData = useUpdateGameData();
+  const { addAdventurerExperience } = useUpdateUserData();
 
   const battleManagerRef = useRef<BattleManager>();
   const monsterIdsRef = useRef<MonsterId[]>();
@@ -123,6 +117,17 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
   const onEnd = (isWin: boolean): void => {
     // TODO 勝利なら経験値等の処理
     sendLog(`${isWin ? "勝利" : "敗北"}`);
+    if (isWin) {
+      const experience = sum(
+        monsterIdsRef.current!.map(
+          (monsterId) => MONSTER_INFO[monsterId].experience
+        )
+      );
+      for (let index = 0; index < adventurerData.length; index++) {
+        addAdventurerExperience(index, experience);
+      }
+      sendLog(`${experience}経験値を手に入れた`);
+    }
   };
 
   const restart = (): void => {

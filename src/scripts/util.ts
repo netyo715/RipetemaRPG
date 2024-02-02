@@ -5,3 +5,7 @@ export const getRandomId = (): string => {
 export const getRandomValue = <T>(array: T[]): T => {
   return array[Math.floor(Math.random() * array.length)];
 };
+
+export const sum = (numbers: number[]): number => {
+  return numbers.reduce((pv, cv) => pv + cv, 0);
+};

@@ -1,4 +1,4 @@
-import { getBaseStatus } from "../data/adventurer";
+import { getBaseStatus, getRequiredExperience } from "../data/adventurer";
 import { GEAR_INFO } from "../data/gear";
 import { JOB_SKILL_INFO, JobId, getJobStatus } from "../data/job";
 import { SkillId } from "../data/skill";
@@ -12,11 +12,11 @@ import { Status } from "../types/battle";
  * @param includeGear 装備を含めるか
  * @returns 冒険者、職業、装備の合計ステータス
  */
-export const getAdventurerStatus: (
+export const getAdventurerStatus = (
   adventurer: Adventurer,
   jobId?: JobId,
-  includeGear?: boolean
-) => Status = (adventurer, jobId, includeGear = true) => {
+  includeGear: boolean = true
+): Status => {
   const baseStatus = getBaseStatus(adventurer.level);
   const jobStatus = getJobStatus(
     jobId || adventurer.currentJobId,
@@ -35,9 +35,7 @@ export const getAdventurerStatus: (
  * @param adventurer 冒険者
  * @returns 使用可能なスキル
  */
-export const getAdventurerSkillIds: (adventurer: Adventurer) => SkillId[] = (
-  adventurer
-) => {
+export const getAdventurerSkillIds = (adventurer: Adventurer): SkillId[] => {
   const jobId = adventurer.currentJobId;
   const jobLevel = adventurer.jobInfo[jobId]!.level;
   let skillIds: SkillId[] = [];
@@ -54,9 +52,7 @@ export const getAdventurerSkillIds: (adventurer: Adventurer) => SkillId[] = (
  * @param statuses ステータス
  * @returns 合計ステータス
  */
-const mergeStatus: (...statuses: Partial<Status>[]) => Status = (
-  ...statuses
-) => {
+const mergeStatus = (...statuses: Partial<Status>[]): Status => {
   const statusSum: Status = {
     hp: 0,
     atk: 0,

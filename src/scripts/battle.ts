@@ -207,13 +207,18 @@ export const causeDamage = (
 /**
  * hat(狙われやすさ)を考慮してユニットを返す
  * @param units
+ * @param isAliveOnly 生きているユニットのみ
  * @returns
  */
-export const getRandomUnitWithHat = (units: BattleUnit[]): BattleUnit => {
+export const getRandomUnitWithHat = (
+  units: BattleUnit[],
+  isAliveOnly: boolean = true
+): BattleUnit => {
   let hatSum = 0;
-  units.forEach((unit) => (hatSum += unit.status.hat));
+  const filteredUnits = units.filter((unit) => !isAliveOnly || unit.isAlive);
+  filteredUnits.forEach((unit) => (hatSum += unit.status.hat));
   let num = Math.random() * hatSum;
-  for (const unit of units) {
+  for (const unit of filteredUnits) {
     num -= unit.status.hat;
     if (num < 0) return unit;
   }
