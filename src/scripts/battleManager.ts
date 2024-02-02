@@ -3,7 +3,7 @@ import { BattleUnit, BattleUnitForView } from "../types/battle";
 import {
   createBattleUnitFromAdventurer,
   createBattleUnitFromMonsterId,
-} from "../utilities/battle";
+} from "./battle";
 import { MonsterId } from "../data/monster";
 import { Dispatch, SetStateAction } from "react";
 

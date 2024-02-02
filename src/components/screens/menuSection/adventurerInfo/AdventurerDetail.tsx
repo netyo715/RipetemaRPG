@@ -12,7 +12,7 @@ import {
 import { useAdventurerData } from "../../../../contexts/UserDataProvider";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { JOB_NAME, getJobRequiredExperience } from "../../../../data/job";
-import { getAdventurerStatus } from "../../../../utilities/adventurer";
+import { getAdventurerStatus } from "../../../../scripts/adventurer";
 import { getRequiredExperience } from "../../../../data/adventurer";
 import { GEAR_INFO } from "../../../../data/gear";
 

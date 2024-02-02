@@ -15,7 +15,7 @@ import {
 } from "./UserDataProvider";
 import { BattleManager } from "../scripts/battleManager";
 import { Area } from "../types/dungeon";
-import { getRandomMonsterIdsFromMonsterPattern } from "../utilities/battle";
+import { getRandomMonsterIdsFromMonsterPattern } from "../scripts/battle";
 import { MonsterId } from "../data/monster";
 import { LOG_LINE_MAX } from "../data/game";
 import { BattleUnitForView } from "../types/battle";
