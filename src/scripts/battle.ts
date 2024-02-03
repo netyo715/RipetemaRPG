@@ -1,3 +1,4 @@
+import { ItemId } from "../data/item";
 import { MONSTER_INFO, MonsterId } from "../data/monster";
 import { SKILL_INFO, SkillId } from "../data/skill";
 import { Adventurer } from "../types/adventurer";
@@ -5,7 +6,7 @@ import { BattleUnit, DamageDetail } from "../types/battle";
 import { MonsterPattern } from "../types/dungeon";
 import { ActiveSkill, NormalAttack, PassiveSkill } from "../types/skill";
 import { getAdventurerSkillIds, getAdventurerStatus } from "./adventurer";
-import { getRandomId, getRandomValue } from "./util";
+import { getRandomId, getRandomValue, sum } from "./util";
 
 /**
  * 冒険者から戦闘ユニットオブジェクトを作成する
@@ -223,4 +224,30 @@ export const getRandomUnitWithHat = (
     if (num < 0) return unit;
   }
   throw Error;
+};
+
+/**
+ * ドロップするアイテムを取得
+ * @param monsterIds
+ * @returns アイテムと個数の組のarray
+ */
+export const getDropItem = (
+  monsterIds: MonsterId[]
+): { itemId: ItemId; amount: number }[] => {
+  let dropped: { itemId: ItemId; amount: number }[] = [];
+  monsterIds
+    .map((monsterId) => MONSTER_INFO[monsterId].lootTable)
+    .forEach((table) => {
+      const weightSum =
+        sum(table.loots.map((loot) => loot.weight)) + table.nonDropWeight;
+      let num = Math.random() * weightSum;
+      for (const loot of table.loots) {
+        num -= loot.weight;
+        if (num < 0) {
+          dropped.push({ itemId: loot.itemId, amount: loot.amount });
+          break;
+        }
+      }
+    });
+  return dropped;
 };

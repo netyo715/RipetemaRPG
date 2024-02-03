@@ -8,6 +8,7 @@ import {
 } from "@yamada-ui/react";
 import { Settings } from "./settings/Settings";
 import { AdventurerInfo } from "./adventurerInfo/AdventurerInfo";
+import { ItemInfo } from "./itemInfo/ItemInfo";
 
 // TODO
 export const MenuSection: React.FC = () => {
@@ -28,7 +29,7 @@ export const MenuSection: React.FC = () => {
             <p>b</p>
           </TabPanel>
           <TabPanel h="full">
-            <p>c</p>
+            <ItemInfo />
           </TabPanel>
           <TabPanel h="full">
             <Settings />

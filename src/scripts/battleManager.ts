@@ -65,6 +65,8 @@ export class BattleManager {
 
     // アクション
     let remainingTime: number = TURN_INTERVAL; // このフレームで処理する時間の残り
+    let monstersIsAlive = true;
+    let adventurersIsAlive = true;
     while (remainingTime > 0) {
       // 処理する時間
       // 一番早いアクションの時間とTURN_INTERVALの残りのmin
@@ -81,32 +83,44 @@ export class BattleManager {
       remainingTime -= elapsedTime;
       // アクション実行
       // スキルが途中で増減したりリキャストタイムが変わったら壊れるかも
-      [...this.adventurerUnits, ...this.monsterUnits]
-        .filter((unit) => unit.isAlive)
-        .forEach((unit) => {
-          unit.activeActions.forEach((action) => {
-            action.remainingRecastTime -= elapsedTime;
-            // 残りリキャストタイムが0になったら
-            if (action.remainingRecastTime <= 0) {
-              action.remainingRecastTime = action.recastTime;
-              if (unit.isAdventurer) {
-                action.effect(
-                  unit,
-                  this.adventurerUnits,
-                  this.monsterUnits,
-                  this.sendLog
-                );
-              } else {
-                action.effect(
-                  unit,
-                  this.monsterUnits,
-                  this.adventurerUnits,
-                  this.sendLog
-                );
-              }
+      for (const unit of [...this.adventurerUnits, ...this.monsterUnits]) {
+        for (const action of unit.activeActions) {
+          if (!unit.isAlive) continue;
+          action.remainingRecastTime -= elapsedTime;
+          // 残りリキャストタイムが0になったら
+          if (action.remainingRecastTime <= 0) {
+            action.remainingRecastTime = action.recastTime;
+            if (unit.isAdventurer) {
+              action.effect(
+                unit,
+                this.adventurerUnits,
+                this.monsterUnits,
+                this.sendLog
+              );
+            } else {
+              action.effect(
+                unit,
+                this.monsterUnits,
+                this.adventurerUnits,
+                this.sendLog
+              );
             }
-          });
-        });
+            monstersIsAlive = this.monsterUnits.every((unit) => unit.isAlive);
+            adventurersIsAlive = this.adventurerUnits.every(
+              (unit) => unit.isAlive
+            );
+            if (!monstersIsAlive || !adventurersIsAlive) {
+              break;
+            }
+          }
+        }
+        if (!monstersIsAlive || !adventurersIsAlive) {
+          break;
+        }
+      }
+      if (!monstersIsAlive || !adventurersIsAlive) {
+        break;
+      }
     }
 
     // 描画
@@ -114,12 +128,12 @@ export class BattleManager {
 
     // 戦闘終了判定
     // 勝利
-    if (this.monsterUnits.every((unit) => !unit.isAlive)) {
+    if (!monstersIsAlive) {
       this.end(true);
       return;
     }
     // 敗北
-    if (this.adventurerUnits.every((unit) => !unit.isAlive)) {
+    if (!adventurersIsAlive) {
       this.end(false);
       return;
     }

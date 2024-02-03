@@ -10,12 +10,16 @@ import { useImmer } from "use-immer";
 import { useAdventurerData } from "./UserDataProvider";
 import { BattleManager } from "../scripts/battleManager";
 import { Area } from "../types/dungeon";
-import { getRandomMonsterIdsFromMonsterPattern } from "../scripts/battle";
+import {
+  getDropItem,
+  getRandomMonsterIdsFromMonsterPattern,
+} from "../scripts/battle";
 import { MONSTER_INFO, MonsterId } from "../data/monster";
 import { LOG_LINE_MAX } from "../data/game";
 import { BattleUnitForView } from "../types/battle";
 import { useUpdateUserData } from "./DataManagerProvider";
 import { sum } from "../scripts/util";
+import { ITEM_NAME } from "../data/item";
 
 //TODO
 type BattleManagerContextProps = {
@@ -40,7 +44,7 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const adventurerData = useAdventurerData();
-  const { addAdventurerExperience } = useUpdateUserData();
+  const { addAdventurerExperience, changeItemAmount } = useUpdateUserData();
 
   const battleManagerRef = useRef<BattleManager>();
   const monsterIdsRef = useRef<MonsterId[]>();
@@ -127,6 +131,11 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
         addAdventurerExperience(index, experience);
       }
       sendLog(`${experience}経験値を手に入れた`);
+      const dropItems = getDropItem(monsterIdsRef.current!);
+      dropItems.forEach((drop) => {
+        changeItemAmount(drop.itemId, drop.amount);
+        sendLog(`${ITEM_NAME[drop.itemId]}を${drop.amount}個手に入れた`);
+      });
     }
   };
 
