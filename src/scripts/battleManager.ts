@@ -81,46 +81,15 @@ export class BattleManager {
           )
       );
       remainingTime -= elapsedTime;
-      // アクション実行
-      // スキルが途中で増減したりリキャストタイムが変わったら壊れるかも
+      // リキャストタイムを減らす
       for (const unit of [...this.adventurerUnits, ...this.monsterUnits]) {
         for (const action of unit.activeActions) {
-          if (!unit.isAlive) continue;
+          if (!unit.isAlive) continue; // 死んでいるユニットはリキャストタイムが変わらない
           action.remainingRecastTime -= elapsedTime;
-          // 残りリキャストタイムが0になったら
-          if (action.remainingRecastTime <= 0) {
-            action.remainingRecastTime = action.recastTime;
-            if (unit.isAdventurer) {
-              action.effect(
-                unit,
-                this.adventurerUnits,
-                this.monsterUnits,
-                this.sendLog
-              );
-            } else {
-              action.effect(
-                unit,
-                this.monsterUnits,
-                this.adventurerUnits,
-                this.sendLog
-              );
-            }
-            monstersIsAlive = this.monsterUnits.every((unit) => unit.isAlive);
-            adventurersIsAlive = this.adventurerUnits.every(
-              (unit) => unit.isAlive
-            );
-            if (!monstersIsAlive || !adventurersIsAlive) {
-              break;
-            }
-          }
-        }
-        if (!monstersIsAlive || !adventurersIsAlive) {
-          break;
         }
       }
-      if (!monstersIsAlive || !adventurersIsAlive) {
-        break;
-      }
+      // 残りリキャストタイムが0のアクション実行
+      this.doAction();
     }
 
     // 描画
@@ -128,18 +97,53 @@ export class BattleManager {
 
     // 戦闘終了判定
     // 勝利
-    if (!monstersIsAlive) {
+    if (!this.monsterUnits.every((unit) => unit.isAlive)) {
       this.end(true);
       return;
     }
     // 敗北
-    if (!adventurersIsAlive) {
+    if (!this.adventurerUnits.every((unit) => unit.isAlive)) {
       this.end(false);
       return;
     }
 
     // 次のフレーム
     this.turnHandler = setTimeout(this.turn.bind(this), TURN_INTERVAL);
+  }
+
+  /**
+   * リキャストタイムが0になったアクションを行う
+   */
+  doAction() {
+    for (const unit of [...this.adventurerUnits, ...this.monsterUnits]) {
+      for (const action of unit.activeActions) {
+        if (!unit.isAlive) continue;
+        if (action.remainingRecastTime <= 0) {
+          action.remainingRecastTime = action.recastTime;
+          if (unit.isAdventurer) {
+            action.effect(
+              unit,
+              this.adventurerUnits,
+              this.monsterUnits,
+              this.sendLog
+            );
+          } else {
+            action.effect(
+              unit,
+              this.monsterUnits,
+              this.adventurerUnits,
+              this.sendLog
+            );
+          }
+          if (
+            !this.monsterUnits.every((unit) => unit.isAlive) ||
+            !this.adventurerUnits.every((unit) => unit.isAlive)
+          ) {
+            return;
+          }
+        }
+      }
+    }
   }
 
   /**
