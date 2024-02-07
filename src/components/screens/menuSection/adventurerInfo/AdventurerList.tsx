@@ -7,7 +7,7 @@ export const AdventurerList: React.FC<{
 }> = ({ viewAdventurerDetail }) => {
   const adventurerData = useAdventurerData();
   return (
-    <VStack>
+    <VStack p="md">
       {adventurerData.map((adv, index) => {
         return (
           <Card
@@ -15,8 +15,13 @@ export const AdventurerList: React.FC<{
             cursor="pointer"
             onClick={() => viewAdventurerDetail(index)}
           >
-            <Heading>LV {adv.level} {adv.name}</Heading>
-            <Text>LV {adv.jobInfo[adv.currentJobId]!.level} {JOB_NAME[adv.currentJobId]}</Text>
+            <Heading>
+              LV {adv.level} {adv.name}
+            </Heading>
+            <Text>
+              LV {adv.jobInfo[adv.currentJobId]!.level}{" "}
+              {JOB_NAME[adv.currentJobId]}
+            </Text>
           </Card>
         );
       })}

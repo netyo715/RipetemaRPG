@@ -9,6 +9,7 @@ import {
 import { Settings } from "./settings/Settings";
 import { AdventurerInfo } from "./adventurerInfo/AdventurerInfo";
 import { ItemInfo } from "./itemInfo/ItemInfo";
+import { GearInfo } from "./gearInfo/GearInfo";
 
 // TODO
 export const MenuSection: React.FC = () => {
@@ -22,16 +23,16 @@ export const MenuSection: React.FC = () => {
           <Tab>設定</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel h="full">
+          <TabPanel h="full" p="0">
             <AdventurerInfo />
           </TabPanel>
-          <TabPanel h="full">
-            <p>b</p>
+          <TabPanel h="full" p="0">
+            <GearInfo />
           </TabPanel>
-          <TabPanel h="full">
+          <TabPanel h="full" p="0">
             <ItemInfo />
           </TabPanel>
-          <TabPanel h="full">
+          <TabPanel h="full" p="0">
             <Settings />
           </TabPanel>
         </TabPanels>

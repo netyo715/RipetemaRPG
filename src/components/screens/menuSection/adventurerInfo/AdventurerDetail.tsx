@@ -26,7 +26,7 @@ export const AdventurerDetail: React.FC<{
   const status = getAdventurerStatus(adv);
   return (
     <Flex direction="column" h="full" gap="md">
-      <HStack flexShrink="0">
+      <HStack flexShrink="0" p="md">
         <Heading>{adv.name}</Heading>
         <Spacer />
         {adventurerData.length > 1 && (

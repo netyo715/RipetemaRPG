@@ -1,4 +1,4 @@
-import { getBaseStatus, getRequiredExperience } from "../data/adventurer";
+import { getBaseStatus } from "../data/adventurer";
 import { GEAR_INFO } from "../data/gear";
 import { JOB_SKILL_INFO, JobId, getJobStatus } from "../data/job";
 import { SkillId } from "../data/skill";

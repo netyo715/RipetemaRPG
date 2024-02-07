@@ -1,4 +1,4 @@
-import { Container } from "@yamada-ui/react";
+import { Container, ScrollArea, VStack } from "@yamada-ui/react";
 import { Column, Table } from "@yamada-ui/table";
 import { useMemo } from "react";
 import { useItemData } from "../../../../contexts/UserDataProvider";
@@ -26,7 +26,14 @@ export const ItemInfo: React.FC = () => {
   );
   return (
     <Container h="full" p="0">
-      <Table columns={columns} data={data} enableRowSelection={false} />
+      <ScrollArea type="always" p="md" innerProps={{ as: VStack, minH: 0 }}>
+        <Table
+          overflowX="auto"
+          columns={columns}
+          data={data}
+          enableRowSelection={false}
+        />
+      </ScrollArea>
     </Container>
   );
 };

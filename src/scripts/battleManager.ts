@@ -65,8 +65,6 @@ export class BattleManager {
 
     // アクション
     let remainingTime: number = TURN_INTERVAL; // このフレームで処理する時間の残り
-    let monstersIsAlive = true;
-    let adventurersIsAlive = true;
     while (remainingTime > 0) {
       // 処理する時間
       // 一番早いアクションの時間とTURN_INTERVALの残りのmin
@@ -89,7 +87,8 @@ export class BattleManager {
         }
       }
       // 残りリキャストタイムが0のアクション実行
-      this.doAction();
+      // 全滅でbreak
+      if (this.doAction()) break;
     }
 
     // 描画
@@ -113,8 +112,9 @@ export class BattleManager {
 
   /**
    * リキャストタイムが0になったアクションを行う
+   * @returns 全滅したならtrue
    */
-  doAction() {
+  doAction(): boolean {
     for (const unit of [...this.adventurerUnits, ...this.monsterUnits]) {
       for (const action of unit.activeActions) {
         if (!unit.isAlive) continue;
@@ -139,11 +139,12 @@ export class BattleManager {
             !this.monsterUnits.every((unit) => unit.isAlive) ||
             !this.adventurerUnits.every((unit) => unit.isAlive)
           ) {
-            return;
+            return true;
           }
         }
       }
     }
+    return false;
   }
 
   /**

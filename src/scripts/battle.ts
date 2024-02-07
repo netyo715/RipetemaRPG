@@ -6,7 +6,7 @@ import { BattleUnit, DamageDetail } from "../types/battle";
 import { MonsterPattern } from "../types/dungeon";
 import { ActiveSkill, NormalAttack, PassiveSkill } from "../types/skill";
 import { getAdventurerSkillIds, getAdventurerStatus } from "./adventurer";
-import { getRandomId, getRandomValue, sum } from "./util";
+import { getRandomId, sum } from "./util";
 
 /**
  * 冒険者から戦闘ユニットオブジェクトを作成する
