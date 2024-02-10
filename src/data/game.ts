@@ -24,10 +24,10 @@ export const INITIAL_ADVENTURER_DATA: AdventurerData = [
   {
     index: 0,
     name: "新しい冒険者",
-    level: 1,
+    level: 0,
     experience: 0,
-    currentJobId: JobId.冒険者,
-    jobInfo: { [JobId.冒険者]: { level: 1, experience: 0 } },
+    currentJobId: JobId.村人,
+    jobInfo: { [JobId.村人]: { level: 0, experience: 0 } },
     equippedGear: {
       weapon: null,
       shield: null,

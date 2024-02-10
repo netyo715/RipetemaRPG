@@ -6,7 +6,7 @@ import { Status } from "../types/battle";
  * @returns 次のレベルになるための必要経験値
  */
 export const getRequiredExperience: (level: number) => number = (level) => {
-  return level * 100; //TODO
+  return level * 10 + Math.ceil(3 * 1.2 ** level);
 };
 
 /**
@@ -17,15 +17,15 @@ export const getRequiredExperience: (level: number) => number = (level) => {
 export const getBaseStatus: (level: number) => Status = (level) => {
   // TODO 仮
   const ret: Status = {
-    hp: level * 50,
-    atk: level,
-    def: level,
-    mat: level,
-    mdf: level,
-    spd: level,
-    hst: level,
-    crt: level,
-    hat: 10,
+    hp: 50 + level * 10,
+    atk: 5 + level,
+    def: 5 + level,
+    mat: 5 + level,
+    mdf: 5 + level,
+    spd: 5 + level,
+    hst: 0,
+    crt: 5 + Math.round(level / 10),
+    hat: 100,
   };
   return ret;
 };

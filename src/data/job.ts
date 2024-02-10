@@ -5,7 +5,7 @@ import { SkillId } from "./skill";
  * 職業ID
  */
 export enum JobId {
-  冒険者 = "J000",
+  村人 = "J000",
   戦士 = "J001",
   魔導士 = "J002",
 }
@@ -14,7 +14,7 @@ export enum JobId {
  * 職業の名前
  */
 export const JOB_NAME: JobName = {
-  [JobId.冒険者]: "冒険者",
+  [JobId.村人]: "村人",
   [JobId.戦士]: "戦士",
   [JobId.魔導士]: "魔導士",
 };
@@ -23,7 +23,7 @@ export const JOB_NAME: JobName = {
  * 職業毎のスキルと必要レベル
  */
 export const JOB_SKILL_INFO: JobSkillInfo = {
-  [JobId.冒険者]: [],
+  [JobId.村人]: [],
   [JobId.戦士]: [
     {
       requiredLevel: 0,
@@ -42,20 +42,19 @@ export const JOB_SKILL_INFO: JobSkillInfo = {
  * 職業/レベル毎の level から level+1 になるための必要経験値を返す関数
  */
 const JOB_REQUIRED_EXPERIENCE_INFO: JobRequiredExperienceInfo = {
-  [JobId.冒険者]: (level) => {
-    return level * 100; //TODO
+  [JobId.村人]: (level) => {
+    return level * 10 + Math.ceil(3 * 1.2 ** level);
   },
   [JobId.戦士]: (level) => {
-    return level * 100; //TODO
+    return level * 10 + Math.ceil(4.5 * 1.2 ** level);
   },
   [JobId.魔導士]: (level) => {
-    return level * 100; //TODO
+    return level * 10 + Math.ceil(4.5 * 1.2 ** level);
   },
 };
 
 const JOB_STATUS_INFO: JobStatusInfo = {
-  [JobId.冒険者]: (level) => {
-    // TODO 仮
+  [JobId.村人]: (level) => {
     const ret: Status = {
       hp: level,
       atk: level,
@@ -63,39 +62,37 @@ const JOB_STATUS_INFO: JobStatusInfo = {
       mat: level,
       mdf: level,
       spd: level,
-      hst: level,
-      crt: level,
+      hst: 0,
+      crt: 0,
       hat: 0,
     };
     return ret;
   },
   [JobId.戦士]: (level) => {
-    // TODO 仮
     const ret: Status = {
-      hp: level,
-      atk: level,
-      def: level,
+      hp: level * 30,
+      atk: level * 3,
+      def: level * 3,
       mat: level,
       mdf: level,
-      spd: level,
-      hst: level,
-      crt: level,
-      hat: 10,
+      spd: level * 2,
+      hst: 0,
+      crt: 0,
+      hat: 50,
     };
     return ret;
   },
   [JobId.魔導士]: (level) => {
-    // TODO 仮
     const ret: Status = {
-      hp: level,
+      hp: level * 10,
       atk: level,
       def: level,
-      mat: level,
-      mdf: level,
+      mat: level * 3,
+      mdf: level * 3,
       spd: level,
-      hst: level,
-      crt: level,
-      hat: 0,
+      hst: Math.floor(level * 0.3),
+      crt: 0,
+      hat: -50,
     };
     return ret;
   },
