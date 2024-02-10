@@ -96,12 +96,12 @@ export class BattleManager {
 
     // 戦闘終了判定
     // 勝利
-    if (!this.monsterUnits.every((unit) => unit.isAlive)) {
+    if (this.monsterUnits.every((unit) => !unit.isAlive)) {
       this.end(true);
       return;
     }
     // 敗北
-    if (!this.adventurerUnits.every((unit) => unit.isAlive)) {
+    if (this.adventurerUnits.every((unit) => !unit.isAlive)) {
       this.end(false);
       return;
     }
@@ -136,8 +136,8 @@ export class BattleManager {
             );
           }
           if (
-            !this.monsterUnits.every((unit) => unit.isAlive) ||
-            !this.adventurerUnits.every((unit) => unit.isAlive)
+            this.monsterUnits.every((unit) => !unit.isAlive) ||
+            this.adventurerUnits.every((unit) => !unit.isAlive)
           ) {
             return true;
           }
