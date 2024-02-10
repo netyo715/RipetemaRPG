@@ -12,13 +12,13 @@ import { useBattleManager } from "../../../contexts/BattleManagerProvider";
 export const BattleView: React.FC = () => {
   const { closeBattle, battleLog, battleInfo } = useBattleManager();
   return (
-    <VStack h="full" p="md">
-      <HStack>
+    <VStack h="full" p="0" gap="0">
+      <HStack p="md">
         <Heading>{battleInfo?.area.name}</Heading>
         <Spacer />
         <CloseButton onClick={closeBattle} />
       </HStack>
-      <VStack>
+      <VStack p="md">
         {battleInfo?.adventurerUnitForViews.map((unit, index) => {
           return (
             <Text key={"a" + index}>
