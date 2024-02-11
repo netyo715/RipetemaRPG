@@ -12,6 +12,7 @@ export type Monster = {
   status: Status;
   skillIds: SkillId[];
   experience: number;
+  gold: number;
   lootTable: LootTable;
 };
 

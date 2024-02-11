@@ -131,6 +131,10 @@ export const BattleManagerProvider: React.FC<{ children: ReactNode }> = ({
         addAdventurerExperience(index, experience);
       }
       sendLog(`${experience}経験値を手に入れた`);
+      const gold = sum(
+        monsterIdsRef.current!.map((monsterId) => MONSTER_INFO[monsterId].gold)
+      );
+      sendLog(`${gold}ゴールド手に入れた`);
       const dropItems = getDropItem(monsterIdsRef.current!);
       dropItems.forEach((drop) => {
         changeItemAmount(drop.itemId, drop.amount);

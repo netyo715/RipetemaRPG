@@ -6,18 +6,26 @@ import { MonsterId } from "./monster";
  */
 export const DUNGEONS: Dungeon[] = [
   {
-    // TODO 仮
     name: "草原",
     areas: [
       {
-        name: "草原入口",
+        name: "草原の入口",
         monsterPatterns: [
           {
             monsterIds: [MonsterId.スライム],
-            weight: 2,
+            weight: 1,
           },
+        ],
+      },
+      {
+        name: "丘陵",
+        monsterPatterns: [
           {
             monsterIds: [MonsterId.スライム, MonsterId.スライム],
+            weight: 1,
+          },
+          {
+            monsterIds: [MonsterId.つのうさぎ],
             weight: 1,
           },
         ],

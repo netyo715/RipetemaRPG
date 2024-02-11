@@ -23,7 +23,8 @@ type UpdateUserDataContextProps = {
     gameData: GameData
   ) => void;
   addAdventurerExperience: (index: number, experience: number) => void;
-  changeItemAmount: (itemId: ItemId, amountDiff: number) => void;
+  changeItemAmount: (itemId: ItemId, diff: number) => void;
+  changeGoldAmount: (diff: number) => void;
 };
 
 const updateUserDataContext = createContext<
@@ -87,13 +88,19 @@ export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
     console.log("loaded");
   };
 
-  const changeItemAmount = (itemId: ItemId, amountDiff: number): void => {
+  const changeItemAmount = (itemId: ItemId, diff: number): void => {
     updateItemData((draft) => {
       if (itemId in draft) {
-        draft[itemId]! += amountDiff;
+        draft[itemId]! += diff;
       } else {
-        draft[itemId] = amountDiff;
+        draft[itemId] = diff;
       }
+    });
+  };
+
+  const changeGoldAmount = (diff: number): void => {
+    updateGameData((draft) => {
+      draft.gold += diff;
     });
   };
 
@@ -131,6 +138,7 @@ export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
     loadUserData: loadUserData,
     addAdventurerExperience: addAdventurerExperience,
     changeItemAmount: changeItemAmount,
+    changeGoldAmount: changeGoldAmount,
   };
 
   return (
