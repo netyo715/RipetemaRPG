@@ -3,8 +3,7 @@
  */
 export enum ItemId {
   獣の皮 = "I000",
-  木の板 = "I001",
-  獣の骨 = "I002",
+  獣の骨 = "I001",
 }
 
 /**
@@ -12,7 +11,6 @@ export enum ItemId {
  */
 export const ITEM_NAME: ItemName = {
   [ItemId.獣の皮]: "獣の皮",
-  [ItemId.木の板]: "木の板",
   [ItemId.獣の骨]: "獣の骨",
 };
 
