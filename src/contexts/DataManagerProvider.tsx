@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext, useEffect, useRef } from "react";
-import { AUTO_SAVE_INTERVAL } from "../data/game";
+import { AUTO_SAVE_INTERVAL, LOCAL_STORAGE_USER_DATA_KEY } from "../data/game";
 import { ItemId } from "../data/item";
 import {
   useAdventurerData,
@@ -8,11 +8,13 @@ import {
   useItemData,
   useUpdateAdventurerData,
   useUpdateGameData,
+  useUpdateGearData,
   useUpdateItemData,
 } from "./UserDataProvider";
 import { AdventurerData, GameData, GearData, ItemData } from "../types/game";
 import { getRequiredExperience } from "../data/adventurer";
 import { getJobRequiredExperience } from "../data/job";
+import { saveData2UserData, userData2SaveData } from "../scripts/game";
 
 type UpdateUserDataContextProps = {
   saveUserData: () => void;
@@ -43,7 +45,7 @@ export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
   const gameData = useGameData();
 
   const updateAdventurerData = useUpdateAdventurerData();
-  const updateGearData = useUpdateGameData();
+  const updateGearData = useUpdateGearData();
   const updateItemData = useUpdateItemData();
   const updateGameData = useUpdateGameData();
 
@@ -70,9 +72,29 @@ export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
     };
   });
 
+  /**
+   * ゲームデータロード
+   */
+  useEffect(() => {
+    const localData = localStorage.getItem(LOCAL_STORAGE_USER_DATA_KEY);
+    if (localData) {
+      const userData = saveData2UserData(localData);
+      loadUserData(
+        userData.adventurerData,
+        userData.gearData,
+        userData.itemData,
+        userData.gameData
+      );
+    }
+  }, []);
+
   // 以下、useUpdateUserDataで呼ぶ関数
   const saveUserData = (): void => {
-    console.log("saved"); // TODO 実装する
+    localStorage.setItem(
+      LOCAL_STORAGE_USER_DATA_KEY,
+      userData2SaveData(adventurerData, itemData, gearData, gameData)
+    );
+    console.log("userdata saved");
   };
 
   const loadUserData = (
@@ -81,11 +103,11 @@ export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
     itemData: ItemData,
     gameData: GameData
   ): void => {
-    updateAdventurerData((draft) => adventurerData);
-    updateGearData((draft) => gearData);
-    updateItemData((draft) => itemData);
-    updateGameData((draft) => gameData);
-    console.log("loaded");
+    updateAdventurerData(adventurerData);
+    updateGearData(gearData);
+    updateItemData(itemData);
+    updateGameData(gameData);
+    console.log("userdata loaded");
   };
 
   const changeItemAmount = (itemId: ItemId, diff: number): void => {

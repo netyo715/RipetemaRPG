@@ -7,6 +7,11 @@ import { JobId } from "./job";
 export const GAME_VERSION = "0.0.0";
 
 /**
+ * ローカルストレージのセーブデータのキー
+ */
+export const LOCAL_STORAGE_USER_DATA_KEY = "RepetemaRPGSaveData";
+
+/**
  * オートセーブの間隔
  */
 // export const AUTO_SAVE_INTERVAL = 30000;
