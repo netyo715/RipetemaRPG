@@ -1,5 +1,9 @@
 import { ReactNode, createContext, useContext, useEffect, useRef } from "react";
-import { AUTO_SAVE_INTERVAL, LOCAL_STORAGE_USER_DATA_KEY } from "../data/game";
+import {
+  AUTO_SAVE_INTERVAL,
+  INITIAL_ADVENTURER_DATA,
+  LOCAL_STORAGE_USER_DATA_KEY,
+} from "../data/game";
 import { ItemId } from "../data/item";
 import {
   useAdventurerData,
@@ -24,6 +28,7 @@ type UpdateUserDataContextProps = {
     itemData: ItemData,
     gameData: GameData
   ) => void;
+  resetUserData: () => void;
   addAdventurerExperience: (index: number, experience: number) => void;
   changeItemAmount: (itemId: ItemId, diff: number) => void;
   changeGoldAmount: (diff: number) => void;
@@ -110,6 +115,13 @@ export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
     console.log("userdata loaded");
   };
 
+  const resetUserData = (): void => {
+    updateAdventurerData(INITIAL_ADVENTURER_DATA);
+    updateGearData([]);
+    updateItemData({});
+    updateGameData({ gold: 0 }); // TODO 初期値を別で定義
+  };
+
   const changeItemAmount = (itemId: ItemId, diff: number): void => {
     updateItemData((draft) => {
       if (itemId in draft) {
@@ -158,6 +170,7 @@ export const DataManagerProvider: React.FC<{ children: ReactNode }> = ({
   const contextValue: UpdateUserDataContextProps = {
     saveUserData: saveUserData,
     loadUserData: loadUserData,
+    resetUserData: resetUserData,
     addAdventurerExperience: addAdventurerExperience,
     changeItemAmount: changeItemAmount,
     changeGoldAmount: changeGoldAmount,
