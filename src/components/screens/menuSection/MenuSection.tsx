@@ -10,6 +10,7 @@ import { Settings } from "./settings/Settings";
 import { AdventurerInfo } from "./adventurerInfo/AdventurerInfo";
 import { ItemInfo } from "./itemInfo/ItemInfo";
 import { GearInfo } from "./gearInfo/GearInfo";
+import { Create } from "./create/Create";
 
 // TODO
 export const MenuSection: React.FC = () => {
@@ -20,6 +21,7 @@ export const MenuSection: React.FC = () => {
           <Tab>冒険者</Tab>
           <Tab>装備</Tab>
           <Tab>アイテム</Tab>
+          <Tab>合成</Tab>
           <Tab>設定</Tab>
         </TabList>
         <TabPanels>
@@ -31,6 +33,9 @@ export const MenuSection: React.FC = () => {
           </TabPanel>
           <TabPanel h="full" p="0">
             <ItemInfo />
+          </TabPanel>
+          <TabPanel h="full" p="0">
+            <Create />
           </TabPanel>
           <TabPanel h="full" p="0">
             <Settings />
